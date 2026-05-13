@@ -37,43 +37,13 @@ export function TechStackSection() {
   const [showRunningStatus, setShowRunningStatus] = useState(false);
 
   const stackConfig = {
-    languages: [
-      "Java",
-      "Python",
-      "SQL",
-      "JavaScript",
-      "TypeScript"
-    ],
-    backend: [
-      "Spring Boot",
-      "REST APIs",
-      "OAuth2/JWT",
-      "Node.js"
-    ],
-    cloud_devops: [
-      "AWS",
-      "Docker",
-      "CI/CD",
-      "Linux",
-      "Git"
-    ],
-    data: [
-      "PostgreSQL",
-      "ETL",
-      "Data Pipelines",
-      "SQL"
-    ],
-    ai_ml: [
-      "LLMs",
-      "RAG",
-      "Vector Search",
-      "Prompt Engineering",
-      "AI APIs",
-    ],
+    languages: ["Java", "Python", "SQL", "JavaScript", "TypeScript"],
+    backend: ["Spring Boot", "REST APIs", "OAuth2/JWT", "Node.js"],
+    cloud_devops: ["AWS", "Docker", "CI/CD", "Linux", "Git"],
+    data: ["PostgreSQL", "ETL", "Data Pipelines", "SQL"],
+    ai_ml: ["LLMs", "RAG", "Vector Search", "AI APIs"],
     enterprise: [
       "Workday",
-      "Workday APIs",
-      "Workday Studio",
       "Constituo",
       "XML",
       "XSLT",
@@ -154,7 +124,7 @@ export function TechStackSection() {
           }}
           className="w-full min-w-0"
         >
-          <div className="mb-12 min-w-0">
+          <div className="mb-8 sm:mb-12 min-w-0">
             <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-indigo)] mb-2 min-w-0">
               <Terminal className="w-4 h-4 shrink-0" />
 
@@ -172,13 +142,13 @@ export function TechStackSection() {
               Technical Stack
             </h2>
 
-            <p className="text-muted-foreground text-base sm:text-lg">
+            <p className="text-muted-foreground text-base sm:text-lg max-w-2xl">
               The core technologies I use to build robust software systems
             </p>
           </div>
 
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-stretch w-full min-w-0">
-            {/* Left: Code Panel */}
+            {/* Code Panel */}
             <div className="lg:col-span-5 w-full min-w-0">
               <div className="bg-card border border-border rounded-xl shadow-xl overflow-hidden font-mono text-sm flex flex-col h-full w-full min-w-0">
                 <div className="flex items-center gap-2 bg-muted/50 border-b border-border px-4 py-3 min-h-[45px]">
@@ -193,8 +163,8 @@ export function TechStackSection() {
                   </span>
                 </div>
 
-                <div className="p-4 sm:p-6 overflow-hidden sm:overflow-x-auto text-[11px] sm:text-[13px] leading-relaxed flex-1 flex flex-col justify-center max-h-[460px] sm:max-h-none">
-                  <div className="w-full sm:min-w-max whitespace-pre-wrap sm:whitespace-pre break-words">
+                <div className="p-4 sm:p-6 overflow-x-auto overflow-y-hidden text-[11px] sm:text-[13px] leading-relaxed flex-1 flex flex-col justify-center code-scrollbar">
+                  <div className="min-w-[620px] sm:min-w-max whitespace-pre">
                     <div>
                       <span className={syntax.keyword}>export</span>
                       <span> </span>
@@ -212,23 +182,26 @@ export function TechStackSection() {
                         <div key={category}>
                           <div>
                             <span>  </span>
-                            <span className={syntax.property}>{category}</span>
+                            <span className={syntax.property}>
+                              {category}
+                            </span>
                             <span className={syntax.punctuation}>: [</span>
                           </div>
 
-                          <div className="pl-4 sm:pl-0">
-                            <span className="hidden sm:inline">    </span>
+                          <div>
+                            <span>    </span>
                             {items.map((item, itemIndex) => (
-                              <span
-                                key={`${category}-${item}`}
-                                className="block sm:inline"
-                              >
-                                <span className="sm:hidden">    </span>
-                                <span className={syntax.string}>"{item}"</span>
+                              <span key={`${category}-${item}`}>
+                                <span className={syntax.string}>
+                                  "{item}"
+                                </span>
+
                                 {itemIndex < items.length - 1 && (
                                   <>
-                                    <span className={syntax.punctuation}>,</span>
-                                    <span className="hidden sm:inline"> </span>
+                                    <span className={syntax.punctuation}>
+                                      ,
+                                    </span>
+                                    <span> </span>
                                   </>
                                 )}
                               </span>
@@ -238,6 +211,7 @@ export function TechStackSection() {
                           <div>
                             <span>  </span>
                             <span className={syntax.punctuation}>]</span>
+
                             {categoryIndex <
                               Object.entries(stackConfig).length - 1 && (
                               <span className={syntax.punctuation}>,</span>
@@ -255,7 +229,7 @@ export function TechStackSection() {
               </div>
             </div>
 
-            {/* Right: Terminal + Reserved Browser Preview */}
+            {/* Runtime */}
             <div className="lg:col-span-7 w-full min-w-0">
               <div className="h-full flex flex-col gap-5">
                 {/* Terminal Command Window */}
@@ -320,7 +294,7 @@ export function TechStackSection() {
                           stack preview running
                         </div>
 
-                        <div>
+                        <div className="break-all">
                           <span className="text-[var(--accent-indigo)]">
                             local
                           </span>{" "}
@@ -332,7 +306,7 @@ export function TechStackSection() {
                 </motion.div>
 
                 {/* Reserved Browser Preview Slot */}
-                <div className="min-h-[300px] sm:min-h-[340px] lg:flex-1 w-full min-w-0">
+                <div className="min-h-[260px] sm:min-h-[340px] lg:flex-1 w-full min-w-0">
                   <motion.div
                     initial={false}
                     animate={
@@ -366,11 +340,11 @@ export function TechStackSection() {
                     </div>
 
                     {/* Browser Body */}
-                    <div className="relative h-[255px] sm:h-[295px] lg:h-[calc(100%-45px)] overflow-hidden bg-[radial-gradient(var(--border)_1px,transparent_1px)] [background-size:16px_16px] bg-background/90">
+                    <div className="relative h-[215px] sm:h-[295px] lg:h-[calc(100%-45px)] overflow-hidden bg-[radial-gradient(var(--border)_1px,transparent_1px)] [background-size:16px_16px] bg-background/90">
                       <div className="absolute inset-y-0 left-0 w-8 sm:w-10 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
                       <div className="absolute inset-y-0 right-0 w-8 sm:w-10 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
 
-                      <div className="h-full w-full overflow-hidden flex flex-col justify-evenly py-5 sm:py-6">
+                      <div className="h-full w-full overflow-hidden flex flex-col justify-evenly py-4 sm:py-6">
                         {/* Row 1 */}
                         <div className="relative w-full max-w-full overflow-hidden">
                           <motion.div
