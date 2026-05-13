@@ -1,10 +1,11 @@
-import { baseUrl } from 'app/sitemap'
+const baseUrl = 'https://kylekolstad.com'
 
 export default function robots() {
   return {
     rules: [
       {
         userAgent: '*',
+        allow: '/',
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
