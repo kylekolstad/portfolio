@@ -51,6 +51,7 @@
   --accent-indigo: #6366f1;
   --accent-violet: #8b5cf6;
   --accent-cyan: #06b6d4;
+  --accent-green: #14b8a6;
   --glow-blue: rgba(0, 112, 243, 0.15);
   --glow-indigo: rgba(99, 102, 241, 0.15);
 }
@@ -95,6 +96,7 @@
   --accent-indigo: #818cf8;
   --accent-violet: #a78bfa;
   --accent-cyan: #22d3ee;
+  --accent-green: #14b8a6;
   --glow-blue: rgba(59, 130, 246, 0.2);
   --glow-indigo: rgba(129, 140, 248, 0.2);
 }
@@ -142,6 +144,7 @@
   --color-accent-indigo: var(--accent-indigo);
   --color-accent-violet: var(--accent-violet);
   --color-accent-cyan: var(--accent-cyan);
+  --color-accent-green: var(--accent-green);
 }
 
 @layer base {
@@ -202,7 +205,6 @@
   }
 }
 
-
 html {
   min-width: 320px;
 }
@@ -221,6 +223,65 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button:not(:disabled),
+a[href] {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.no-visible-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-visible-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes stack-marquee-left {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes stack-marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+.stack-marquee-track-left {
+  animation: stack-marquee-left 42s linear infinite;
+}
+
+.stack-marquee-track-right {
+  animation: stack-marquee-right 46s linear infinite;
+}
+
+.stack-marquee-row:hover .stack-marquee-track-left,
+.stack-marquee-row:hover .stack-marquee-track-right,
+.stack-marquee-stage:hover .stack-marquee-track-left,
+.stack-marquee-stage:hover .stack-marquee-track-right {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-marquee-track-left,
+  .stack-marquee-track-right {
+    animation-play-state: paused;
+  }
+}
+
 pre::-webkit-scrollbar,
 .overflow-x-auto::-webkit-scrollbar {
   height: 10px;
@@ -235,7 +296,6 @@ pre::-webkit-scrollbar-thumb,
 .title {
   text-wrap: balance;
 }
-
 
 /* Mobile/layout safety: prevent animated/terminal content from expanding the page width */
 html,

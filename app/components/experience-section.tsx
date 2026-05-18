@@ -1,9 +1,12 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Terminal } from "lucide-react";
+import { Download, Terminal } from "lucide-react";
 import { useState } from "react";
 import { TypingCommand } from "./ui/typing-command";
+import { LinkPreview } from "@/components/ui/link-preview";
+import { EncryptedText } from "@/components/ui/encrypted-text";
+import { WindowFrame } from "@/components/ui/window-frame";
 
 export function ExperienceSection() {
   const [commandStarted, setCommandStarted] = useState(false);
@@ -13,6 +16,7 @@ export function ExperienceSection() {
       date: "2024 - Present",
       role: "Backend Engineer (Integration & Automation)",
       org: "St. Norbert College",
+      orgUrl: "https://www.snc.edu",
       bullets: [
         "Delivered 25 integrations within a 500+ enterprise ecosystem, enabling secure, high-volume data exchange across enterprise platforms.",
         "Engineered Java-based integration services for complex workflows, supporting scalable production automation and reliable system interoperability.",
@@ -25,6 +29,7 @@ export function ExperienceSection() {
       date: "2020 - 2023",
       role: "Software Engineer (Full Stack)",
       org: "Envano",
+      orgUrl: "https://www.envano.com",
       bullets: [
         "Developed custom web applications and backend APIs for high-traffic digital platforms, supporting scalable and performant solutions.",
         "Optimized backend services integrating external APIs, CMS platforms, and commerce systems, improving performance and system scalability.",
@@ -36,6 +41,7 @@ export function ExperienceSection() {
       date: "2020",
       role: "Software Engineer (Backend)",
       org: "Cognizant",
+      orgUrl: "https://www.cognizant.com",
       bullets: [
         "Selected for enterprise consulting engagement following technical training, completing onboarding and deployment readiness for a confidential client initiative.",
       ],
@@ -45,6 +51,7 @@ export function ExperienceSection() {
       date: "2019 - 2020",
       role: "Software Engineer (Full Stack)",
       org: "Revature",
+      orgUrl: "https://www.revature.com",
       bullets: [
         "Built collaborative full-stack applications in an accelerated software engineering environment focused on enterprise development practices.",
         "Produced internal projects using Java, Spring Framework, Angular, Node.js, JavaScript, HTML, and CSS, delivering production-style solutions in agile team environments.",
@@ -66,7 +73,7 @@ export function ExperienceSection() {
           }}
         >
           <div className="mb-12">
-            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-indigo)] mb-2">
+            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-green)] mb-2">
               <Terminal className="w-4 h-4" />
 
               <span>$</span>
@@ -75,40 +82,37 @@ export function ExperienceSection() {
                 command="tail -f /var/log/impact.log"
                 active={commandStarted}
                 speed={35}
-                className="text-[var(--accent-indigo)]"
+                className="text-[var(--accent-green)]"
               />
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-              Engineering Impact
+              <EncryptedText
+                text="Engineering Impact"
+                encryptedClassName="text-muted-foreground"
+                revealedClassName="text-foreground"
+              />
             </h2>
 
             <p className="text-muted-foreground text-lg">
               A record of systems built, scaled, and maintained.
             </p>
+
+            <a
+              href="/Kyle_Kolstad_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-5 inline-flex items-center gap-2 px-5 py-3 border border-border rounded-lg text-sm font-medium transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-1"
+            >
+              <Download className="w-4 h-4" />
+              View Resume
+            </a>
           </div>
 
-          <div className="bg-card border border-border rounded-xl font-mono text-sm shadow-sm overflow-hidden">
-            {/* Window Header */}
-            <div className="flex items-center bg-muted/50 border-b border-border px-4 py-3 min-h-[45px]">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                </div>
-
-                <span className="ml-2 text-muted-foreground text-xs">
-                  impact.log
-                </span>
-              </div>
-
-              <div className="ml-auto flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
-                <span className="text-xs text-teal-500">Logging active</span>
-              </div>
-            </div>
-
+          <WindowFrame
+            variant="terminal"
+            title="impact.log"
+          >
             <div className="p-6 md:p-8 space-y-12">
               {experiences.map((exp, index) => (
                 <motion.div
@@ -131,8 +135,14 @@ export function ExperienceSection() {
                         {exp.role}
                       </span>
 
-                      <span className="text-muted-foreground sm:ml-2 text-sm sm:text-base">
-                        @ {exp.org}
+                      <span className="text-[var(--accent-green)] sm:ml-2 text-sm sm:text-base">
+                        @{" "}
+                        <LinkPreview
+                          url={exp.orgUrl}
+                          className="font-bold !text-[var(--accent-green)]"
+                        >
+                          {exp.org}
+                        </LinkPreview>
                       </span>
                     </div>
                   </div>
@@ -171,7 +181,7 @@ export function ExperienceSection() {
               <span className="text-teal-500 animate-pulse">_</span>
               <span>Waiting for new log entries...</span>
             </div>
-          </div>
+          </WindowFrame>
         </motion.div>
       </div>
     </section>

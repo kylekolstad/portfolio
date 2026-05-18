@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { Code2, Layers, Zap, Target, Terminal } from "lucide-react";
 import { useState } from "react";
 import { TypingCommand } from "./ui/typing-command";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 
 export function AboutSection() {
   const [commandStarted, setCommandStarted] = useState(false);
@@ -53,7 +54,7 @@ export function AboutSection() {
         >
           <div className="mb-12">
             {/* Section Terminal Label */}
-            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-indigo)] mb-2">
+            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-green)] mb-2">
               <Terminal className="w-4 h-4" />
 
               <span>$</span>
@@ -62,13 +63,17 @@ export function AboutSection() {
                 command="cat /about.txt"
                 active={commandStarted}
                 speed={35}
-                className="text-[var(--accent-indigo)]"
+                className="text-[var(--accent-green)]"
               />
             </div>
 
             <div className="max-w-3xl">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
-                Building software that matters
+                <EncryptedText
+                  text="Building software that matters"
+                  encryptedClassName="text-muted-foreground"
+                  revealedClassName="text-foreground"
+                />
               </h2>
 
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">

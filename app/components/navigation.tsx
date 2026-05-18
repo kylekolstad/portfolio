@@ -10,14 +10,17 @@ export function Navigation() {
   const [mounted, setMounted] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navVisible, setNavVisible] = useState(true);
+  const [navCompact, setNavCompact] = useState(false);
+  const [hoveredNavId, setHoveredNavId] = useState<string | null>(null);
+  const [activeNavId, setActiveNavId] = useState<string | null>(null);
 
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
 
   const navLinks = [
     { name: "About", id: "about" },
-    { name: "Work", id: "work" },
-    { name: "Stack", id: "stack" },
+    { name: "Projects", id: "work" },
+    { name: "Skills", id: "stack" },
     { name: "Experience", id: "experience" },
     { name: "Contact", id: "contact" },
   ];
@@ -34,6 +37,37 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
+    const updateActiveSection = () => {
+      const viewportAnchor = window.scrollY + window.innerHeight * 0.42;
+      let currentId: string | null = null;
+
+      for (const link of navLinks) {
+        const section = document.getElementById(link.id);
+        if (!section) continue;
+
+        const top = section.offsetTop;
+        const bottom = top + section.offsetHeight;
+
+        if (viewportAnchor >= top && viewportAnchor < bottom) {
+          currentId = link.id;
+          break;
+        }
+      }
+
+      setActiveNavId(currentId);
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+
+    return () => {
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, []);
+
+  useEffect(() => {
     const getScrollY = () => {
       return (
         window.scrollY ||
@@ -47,6 +81,8 @@ export function Navigation() {
     const updateNavVisibility = () => {
       const currentScrollY = getScrollY();
       const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
+      setNavCompact(currentScrollY > 80);
 
       if (!isMobile) {
         setNavVisible(true);
@@ -110,41 +146,93 @@ export function Navigation() {
         transition={{ duration: 0.24, ease: "easeOut" }}
         className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-3 md:py-4 pointer-events-none"
       >
-        <div className="max-w-7xl mx-auto pointer-events-auto">
-          <div className="relative flex items-center justify-between px-4 sm:px-6 py-3 min-h-[52px] md:min-h-[45px] bg-muted/80 backdrop-blur-xl border border-border rounded-xl shadow-sm">
-            <div className="flex items-center gap-8 min-w-0">
+        <motion.div
+          className="mx-auto w-full pointer-events-auto"
+          initial={false}
+          animate={{
+            maxWidth: navCompact ? "56rem" : "80rem",
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 280,
+            damping: 32,
+          }}
+        >
+          <motion.div
+            initial={false}
+            animate={{
+              minHeight: navCompact ? 44 : 52,
+              boxShadow: navCompact
+                ? "0 18px 45px rgba(0, 0, 0, 0.10)"
+                : "0 0 0 rgba(0, 0, 0, 0)",
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 280,
+              damping: 32,
+            }}
+            className={`relative grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6 py-3 md:min-h-[45px] rounded-full transition-colors duration-300 ${
+              navCompact
+                ? "border border-border bg-muted/50 backdrop-blur-xl dark:border-neutral-800 dark:bg-neutral-800/80"
+                : "border border-transparent bg-transparent"
+            }`}
+          >
+            <div className="flex items-center min-w-0">
               <button
                 onClick={() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                   setMobileMenuOpen(false);
                   setNavVisible(true);
                 }}
-                className="text-base md:text-lg font-semibold text-foreground hover:opacity-70 transition-opacity truncate"
+                className="text-base md:text-lg font-semibold text-foreground transition-all duration-300 hover:text-[var(--accent-violet)] truncate"
               >
                 Kyle Kolstad
               </button>
+            </div>
 
-              <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-                {navLinks.map((link) => (
+            <div
+              className="hidden md:flex items-center justify-center gap-1 text-sm font-medium"
+              onMouseLeave={() => setHoveredNavId(null)}
+            >
+              {navLinks.map((link) => {
+                const isActive = activeNavId === link.id;
+
+                return (
                   <button
                     key={link.id}
                     onClick={() => scrollToSection(link.id)}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                    onMouseEnter={() => setHoveredNavId(link.id)}
+                    className={`relative rounded-lg px-3 py-1.5 transition-colors duration-300 hover:text-[var(--accent-violet)] ${
+                      isActive
+                        ? "text-[var(--accent-violet)]"
+                        : "text-muted-foreground"
+                    }`}
                   >
-                    {link.name}
+                    {hoveredNavId === link.id && (
+                      <motion.span
+                        layoutId="nav-hover-pill"
+                        className="absolute inset-0 rounded-lg bg-[var(--accent-indigo)]/10 dark:bg-neutral-700/80"
+                        transition={{
+                          type: "spring",
+                          stiffness: 420,
+                          damping: 34,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10">{link.name}</span>
                   </button>
-                ))}
-              </div>
+                );
+              })}
             </div>
 
-            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <div className="flex items-center justify-end gap-1 sm:gap-2 shrink-0">
               <div className="hidden md:flex items-center gap-1 sm:gap-2">
                 <a
                   href="https://github.com/kylekolstad"
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="GitHub"
-                  className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+                  className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
                 >
                   <Github className="w-4 h-4" />
                 </a>
@@ -154,7 +242,7 @@ export function Navigation() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="LinkedIn"
-                  className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+                  className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
                 >
                   <Linkedin className="w-4 h-4" />
                 </a>
@@ -163,7 +251,7 @@ export function Navigation() {
               <button
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
                 aria-label="Toggle theme"
-                className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+                className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
               >
                 {mounted && resolvedTheme === "dark" ? (
                   <Sun className="w-4 h-4" />
@@ -179,7 +267,7 @@ export function Navigation() {
                 }}
                 aria-label="Toggle menu"
                 aria-expanded={mobileMenuOpen}
-                className="md:hidden p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+                className="md:hidden p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
               >
                 {mobileMenuOpen ? (
                   <X className="w-5 h-5" />
@@ -188,8 +276,8 @@ export function Navigation() {
                 )}
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </motion.nav>
 
       <AnimatePresence>
@@ -209,18 +297,26 @@ export function Navigation() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.98 }}
               transition={{ duration: 0.18 }}
-              className="fixed left-4 right-4 top-[76px] z-50 md:hidden bg-card/95 backdrop-blur-xl border border-border rounded-xl shadow-xl overflow-hidden"
+              className="fixed left-4 right-4 top-[76px] z-50 md:hidden bg-muted/50 backdrop-blur-xl border border-border rounded-xl shadow-xl overflow-hidden dark:border-neutral-800 dark:bg-neutral-800"
             >
               <div className="flex flex-col p-2">
-                {navLinks.map((link) => (
-                  <button
-                    key={link.id}
-                    onClick={() => scrollToSection(link.id)}
-                    className="px-4 py-3 text-left text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-lg transition-colors"
-                  >
-                    {link.name}
-                  </button>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = activeNavId === link.id;
+
+                  return (
+                    <button
+                      key={link.id}
+                      onClick={() => scrollToSection(link.id)}
+                      className={`px-4 py-3 text-left text-sm font-medium rounded-lg transition-colors duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 ${
+                        isActive
+                          ? "text-[var(--accent-violet)]"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {link.name}
+                    </button>
+                  );
+                })}
 
                 <div className="flex items-center justify-between px-4 pt-4 mt-2 border-t border-border/50">
                   <span className="text-xs font-mono text-muted-foreground">
@@ -233,7 +329,7 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="GitHub"
-                      className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+                      className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
                     >
                       <Github className="w-4 h-4" />
                     </a>
@@ -243,7 +339,7 @@ export function Navigation() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="LinkedIn"
-                      className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+                      className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
                     >
                       <Linkedin className="w-4 h-4" />
                     </a>

@@ -63,8 +63,8 @@ export function TypingCommand({
   }, [active, command, speed, cursorHideDelay]);
 
   return (
-    <span className={`inline-flex items-center ${className}`}>
-      <span>{typed}</span>
+    <span className={`inline-flex min-w-0 max-w-full items-center ${className}`}>
+      <span className="min-w-0 break-all">{typed}</span>
 
       {showCursor && (
         <motion.span
@@ -72,9 +72,9 @@ export function TypingCommand({
           transition={
             isTyping
               ? { duration: 0 }
-              : { duration: 0.8, repeat: Infinity, ease: "linear" }
+              : { duration: 0.53, repeat: Infinity, ease: "linear" }
           }
-          className="ml-1 inline-block h-3.5 w-1.5 bg-[var(--accent-indigo)]"
+          className="ml-0.5 inline-block h-4 w-2 bg-muted-foreground align-middle dark:bg-neutral-300"
         />
       )}
     </span>

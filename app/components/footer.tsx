@@ -22,7 +22,7 @@ export function Footer() {
           className="flex flex-col md:flex-row items-center justify-between gap-4 px-4 sm:px-6 py-4 bg-muted/50 backdrop-blur-xl border border-border rounded-xl shadow-sm"
         >
           <div className="flex flex-col sm:flex-row items-center gap-2 text-sm text-muted-foreground text-center sm:text-left">
-            <div className="flex items-center gap-2 font-mono text-xs text-[var(--accent-indigo)]">
+            <div className="flex items-center gap-2 font-mono text-xs text-[var(--accent-green)]">
               <Terminal className="w-4 h-4 shrink-0" />
 
               <span className="shrink-0">$</span>
@@ -31,7 +31,7 @@ export function Footer() {
                 command="build --complete"
                 active={commandStarted}
                 speed={35}
-                className="text-[var(--accent-indigo)]"
+                className="text-[var(--accent-green)]"
               />
             </div>
 
@@ -47,7 +47,7 @@ export function Footer() {
             <a
               href="mailto:kylekolstad@gmail.com"
               aria-label="Email"
-              className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+              className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
             >
               <Mail className="w-4 h-4" />
             </a>
@@ -57,7 +57,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+              className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
             >
               <Github className="w-4 h-4" />
             </a>
@@ -67,7 +67,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="p-2 rounded-lg text-foreground/80 hover:text-foreground hover:bg-background/70 transition-colors"
+              className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
             >
               <Linkedin className="w-4 h-4" />
             </a>

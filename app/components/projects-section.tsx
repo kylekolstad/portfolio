@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { TypingCommand } from "./ui/typing-command";
+import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import { EncryptedText } from "@/components/ui/encrypted-text";
 
 export function ProjectsSection() {
   const [commandStarted, setCommandStarted] = useState(false);
@@ -137,7 +139,7 @@ export function ProjectsSection() {
           className="w-full min-w-0"
         >
           <div className="mb-12 min-w-0">
-            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-indigo)] mb-2 min-w-0">
+            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-green)] mb-2 min-w-0">
               <Terminal className="w-4 h-4 shrink-0" />
 
               <span className="shrink-0">$</span>
@@ -146,14 +148,18 @@ export function ProjectsSection() {
                 command="ls /projects"
                 active={commandStarted}
                 speed={35}
-                className="text-[var(--accent-indigo)]"
+                className="text-[var(--accent-green)]"
               />
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div className="flex flex-col gap-4">
               <div>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
-                  Featured Work
+                  <EncryptedText
+                    text="Featured Work"
+                    encryptedClassName="text-muted-foreground"
+                    revealedClassName="text-foreground"
+                  />
                 </h2>
 
                 <p className="mt-3 text-muted-foreground text-base sm:text-lg max-w-2xl">
@@ -161,11 +167,6 @@ export function ProjectsSection() {
                   automation, integrations, APIs, and applied AI.
                 </p>
               </div>
-
-              <button className="hidden md:inline-flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm font-medium transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-1">
-                View all projects
-                <ArrowRight className="w-4 h-4" />
-              </button>
             </div>
           </div>
 
@@ -175,28 +176,49 @@ export function ProjectsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35 }}
-            className="mb-8 bg-card/80 backdrop-blur-sm border-t-2 border-t-[var(--accent-indigo)] border-x border-b border-border/80 rounded-xl p-4 sm:p-6 md:p-8 transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1"
+            className="mb-8"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-0 group-hover:opacity-[0.035] transition-opacity duration-500" />
+            <CardContainer
+              containerClassName="block py-0"
+              className="w-full"
+              rotationStrength={130}
+            >
+                <CardBody className="h-auto w-full rounded-xl border-t-2 border-t-[var(--accent-indigo)] border-x border-b border-border/80 bg-card/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-border hover:bg-card hover:shadow-xl dark:hover:shadow-emerald-500/[0.08]">
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-[0.035] transition-opacity duration-500 group-hover:opacity-[0.06]" />
 
-            <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+            <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-12 items-start [transform-style:preserve-3d]">
               <div className="flex-1 min-w-0 w-full">
                 <div className="mb-6">
-                  <div className="mb-3 inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-indigo)]">
+                  <CardItem
+                    translateZ={35}
+                    className="mb-3 inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-indigo)]"
+                  >
                     <Award className="w-3.5 h-3.5" />
                     spotlight_build
-                  </div>
+                  </CardItem>
 
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-3 group-hover:text-[var(--accent-indigo)] transition-colors">
+                  <CardItem
+                    translateZ={50}
+                    as="h3"
+                    className="text-xl sm:text-2xl font-semibold mb-3 group-hover:text-[var(--accent-indigo)] transition-colors"
+                  >
                     {featuredProject.title}
-                  </h3>
+                  </CardItem>
 
-                  <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                  <CardItem
+                    translateZ={45}
+                    as="p"
+                    className="text-muted-foreground text-sm sm:text-base leading-relaxed"
+                  >
                     {featuredProject.description}
-                  </p>
+                  </CardItem>
                 </div>
 
-                <ul className="space-y-3 text-sm text-muted-foreground mb-6">
+                <CardItem
+                  translateZ={30}
+                  as="ul"
+                  className="space-y-3 text-sm text-muted-foreground mb-6"
+                >
                   {featuredProject.bullets.map((bullet) => (
                     <li key={bullet.text} className="flex items-start gap-2.5">
                       <span className="mt-[2px] flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-[5px] bg-teal-500/10 border border-teal-500/20 text-teal-500">
@@ -206,9 +228,12 @@ export function ProjectsSection() {
                       <span className="leading-relaxed">{bullet.text}</span>
                     </li>
                   ))}
-                </ul>
+                </CardItem>
 
-                <div className="flex flex-wrap gap-4 mb-6 pb-6 border-b border-border/50">
+                <CardItem
+                  translateZ={25}
+                  className="flex flex-wrap gap-4 mb-6 pb-6 border-b border-border/50"
+                >
                   {featuredProject.metadata.map((item) => (
                     <div
                       key={item.label}
@@ -218,9 +243,9 @@ export function ProjectsSection() {
                       <span>{item.label}</span>
                     </div>
                   ))}
-                </div>
+                </CardItem>
 
-                <div className="flex flex-wrap gap-2 mb-8">
+                <CardItem translateZ={25} className="flex flex-wrap gap-2 mb-8">
                   {featuredProject.tags.map((tag) => (
                     <span
                       key={tag}
@@ -229,9 +254,9 @@ export function ProjectsSection() {
                       {tag}
                     </span>
                   ))}
-                </div>
+                </CardItem>
 
-                <div className="flex flex-wrap gap-3">
+                <CardItem translateZ={35} className="flex flex-wrap gap-3">
                   <button className="px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5">
                     Case Study
                     <ExternalLink className="w-4 h-4" />
@@ -241,11 +266,14 @@ export function ProjectsSection() {
                     <Github className="w-4 h-4" />
                     GitHub
                   </button>
-                </div>
+                </CardItem>
               </div>
 
               {/* Mini System Map */}
-              <div className="hidden md:flex lg:w-[320px] shrink-0 bg-background/50 rounded-xl p-4 md:p-6 border border-border/50 h-fit w-full flex flex-col min-w-0 overflow-hidden transition-all duration-300 group-hover:border-border group-hover:bg-background/70">
+              <CardItem
+                translateZ={80}
+                className="hidden md:flex lg:w-[320px] shrink-0 bg-background/50 rounded-xl p-4 md:p-6 border border-border/50 h-fit w-full flex flex-col min-w-0 overflow-hidden transition-all duration-300 group-hover:border-border group-hover:bg-background/70 group-hover:shadow-xl"
+              >
                 <div className="text-xs font-mono text-muted-foreground mb-8 flex items-center gap-2">
                   system_architecture
                 </div>
@@ -289,8 +317,10 @@ export function ProjectsSection() {
                     Vendor APIs (SFTP)
                   </div>
                 </div>
-              </div>
+              </CardItem>
             </div>
+                </CardBody>
+            </CardContainer>
           </motion.div>
 
           {/* Secondary Projects */}
@@ -302,58 +332,86 @@ export function ProjectsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.3 }}
-                className="bg-card/80 backdrop-blur-sm border-t-2 border-t-border border-x border-b border-border/80 rounded-xl p-4 sm:p-6 transition-all duration-300 group flex flex-col shadow-sm hover:border-t-[var(--accent-indigo)] hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1 relative overflow-hidden"
+                className="h-full"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-0 group-hover:opacity-[0.035] transition-opacity duration-500" />
+                <CardContainer
+                  containerClassName="block py-0 h-full"
+                  className="h-full w-full"
+                  rotationStrength={25}
+                >
+                  <CardBody className="bg-card/80 backdrop-blur-sm border-t-2 border-t-border border-x border-b border-border/80 rounded-xl p-4 sm:p-6 transition-all duration-300 group flex h-full w-full flex-col shadow-sm hover:border-t-[var(--accent-indigo)] hover:border-border hover:bg-card hover:shadow-xl relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-0 group-hover:opacity-[0.035] transition-opacity duration-500" />
 
-                <div className="relative flex-1">
-                  <div className="mb-3 flex items-start justify-between gap-4">
-                    <h4 className="text-lg font-semibold group-hover:text-[var(--accent-indigo)] transition-colors">
-                      {project.title}
-                    </h4>
+                    <div className="relative flex-1">
+                      <div className="mb-3 flex items-start justify-between gap-4">
+                        <CardItem
+                          as="h4"
+                          translateZ={35}
+                          className="text-lg font-semibold group-hover:text-[var(--accent-indigo)] transition-colors"
+                        >
+                          {project.title}
+                        </CardItem>
 
-                    <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
+                        <CardItem translateZ={45}>
+                          <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        </CardItem>
+                      </div>
 
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  <ul className="space-y-3 text-xs text-muted-foreground mb-5">
-                    {project.bullets.map((bullet) => (
-                      <li key={bullet.text} className="flex items-start gap-2">
-                        <span className="mt-[2px] flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] bg-teal-500/10 border border-teal-500/20 text-teal-500">
-                          <bullet.icon className="h-2.5 w-2.5" />
-                        </span>
-
-                        <span className="leading-relaxed">{bullet.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 bg-accent/50 text-xs rounded font-mono text-muted-foreground border border-border/50 transition-all duration-300 hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm hover:-translate-y-0.5"
+                      <CardItem
+                        as="p"
+                        translateZ={30}
+                        className="text-muted-foreground text-sm mb-4 leading-relaxed"
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
+                        {project.description}
+                      </CardItem>
 
-                <div className="relative flex gap-2 pt-4 border-t border-border/50 mt-auto">
-                  <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
-                    <ExternalLink className="w-4 h-4" />
-                    Demo
-                  </button>
+                      <CardItem
+                        as="ul"
+                        translateZ={25}
+                        className="space-y-3 text-xs text-muted-foreground mb-5"
+                      >
+                        {project.bullets.map((bullet) => (
+                          <li key={bullet.text} className="flex items-start gap-2">
+                            <span className="mt-[2px] flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] bg-teal-500/10 border border-teal-500/20 text-teal-500">
+                              <bullet.icon className="h-2.5 w-2.5" />
+                            </span>
 
-                  <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
-                    <Github className="w-4 h-4" />
-                    Code
-                  </button>
-                </div>
+                            <span className="leading-relaxed">{bullet.text}</span>
+                          </li>
+                        ))}
+                      </CardItem>
+
+                      <CardItem
+                        translateZ={25}
+                        className="flex flex-wrap gap-2 mb-6"
+                      >
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2 py-0.5 bg-accent/50 text-xs rounded font-mono text-muted-foreground border border-border/50 transition-all duration-300 hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm hover:-translate-y-0.5"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </CardItem>
+                    </div>
+
+                    <CardItem
+                      translateZ={35}
+                      className="relative flex gap-2 pt-4 border-t border-border/50 mt-auto w-full"
+                    >
+                      <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
+                        <ExternalLink className="w-4 h-4" />
+                        Demo
+                      </button>
+
+                      <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
+                        <Github className="w-4 h-4" />
+                        Code
+                      </button>
+                    </CardItem>
+                  </CardBody>
+                </CardContainer>
               </motion.div>
             ))}
           </div>
