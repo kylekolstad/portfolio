@@ -99,7 +99,7 @@ export function ExperienceSection() {
             </p>
 
             <a
-              href="/Kyle_Kolstad_Resume.pdf"
+              href="https://files.kylekolstad.com/portfolio/resume/Kyle_Kolstad_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center gap-2 px-5 py-3 border border-border rounded-lg text-sm font-medium transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-1"

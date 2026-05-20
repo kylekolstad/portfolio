@@ -4,6 +4,7 @@ import { Moon, Sun, Github, Linkedin, Menu, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { Logo } from "./icons/logo";
 
 export function Navigation() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -179,14 +180,15 @@ export function Navigation() {
           >
             <div className="flex items-center min-w-0">
               <button
+                type="button"
                 onClick={() => {
                   window.scrollTo({ top: 0, behavior: "smooth" });
                   setMobileMenuOpen(false);
                   setNavVisible(true);
                 }}
-                className="text-base md:text-lg font-semibold text-foreground transition-all duration-300 hover:text-[var(--accent-violet)] truncate"
+                className="flex items-center min-w-0 transition-all duration-300 hover:text-[var(--accent-violet)]"
               >
-                Kyle Kolstad
+                <Logo className="text-sm md:text-[15px]" />
               </button>
             </div>
 

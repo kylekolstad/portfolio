@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -6,21 +7,10 @@ import { cn } from "@/lib/utils";
 type EncryptedTextProps = {
   text: string;
   className?: string;
-  /**
-   * Time in milliseconds between revealing each subsequent real character.
-   * Lower is faster. Defaults to 50ms per character.
-   */
   revealDelayMs?: number;
-  /** Optional custom character set to use for the gibberish effect. */
   charset?: string;
-  /**
-   * Time in milliseconds between gibberish flips for unrevealed characters.
-   * Lower is more jittery. Defaults to 50ms.
-   */
   flipDelayMs?: number;
-  /** CSS class for styling the encrypted/scrambled characters */
   encryptedClassName?: string;
-  /** CSS class for styling the revealed characters */
   revealedClassName?: string;
 };
 
@@ -34,14 +24,17 @@ function generateRandomCharacter(charset: string): string {
 
 function generateGibberishPreservingSpaces(
   original: string,
-  charset: string,
+  charset: string
 ): string {
   if (!original) return "";
+
   let result = "";
+
   for (let i = 0; i < original.length; i += 1) {
     const ch = original[i];
     result += ch === " " ? " " : generateRandomCharacter(charset);
   }
+
   return result;
 }
 
@@ -57,25 +50,34 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
 
-  const [revealCount, setRevealCount] = useState<number>(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [revealCount, setRevealCount] = useState(0);
+
   const animationFrameRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const lastFlipTimeRef = useRef<number>(0);
-  const scrambleCharsRef = useRef<string[]>(
-    text ? generateGibberishPreservingSpaces(text, charset).split("") : [],
-  );
+  const startTimeRef = useRef(0);
+  const lastFlipTimeRef = useRef(0);
+
+  // Important: deterministic initial value.
+  // Do NOT generate random chars here during render.
+  const scrambleCharsRef = useRef<string[]>(text.split(""));
+
+  useEffect(() => {
+    scrambleCharsRef.current = text.split("");
+    setRevealCount(0);
+    setHasStarted(false);
+  }, [text]);
 
   useEffect(() => {
     if (!isInView) return;
 
-    // Reset state for a fresh animation whenever dependencies change
-    const initial = text
-      ? generateGibberishPreservingSpaces(text, charset)
-      : "";
+    const initial = generateGibberishPreservingSpaces(text, charset);
     scrambleCharsRef.current = initial.split("");
+
+    setHasStarted(true);
+    setRevealCount(0);
+
     startTimeRef.current = performance.now();
     lastFlipTimeRef.current = startTimeRef.current;
-    setRevealCount(0);
 
     let isCancelled = false;
 
@@ -84,30 +86,26 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
 
       const elapsedMs = now - startTimeRef.current;
       const totalLength = text.length;
+
       const currentRevealCount = Math.min(
         totalLength,
-        Math.floor(elapsedMs / Math.max(1, revealDelayMs)),
+        Math.floor(elapsedMs / Math.max(1, revealDelayMs))
       );
 
       setRevealCount(currentRevealCount);
 
-      if (currentRevealCount >= totalLength) {
-        return;
-      }
+      if (currentRevealCount >= totalLength) return;
 
-      // Re-randomize unrevealed scramble characters on an interval
       const timeSinceLastFlip = now - lastFlipTimeRef.current;
+
       if (timeSinceLastFlip >= Math.max(0, flipDelayMs)) {
         for (let index = 0; index < totalLength; index += 1) {
           if (index >= currentRevealCount) {
-            if (text[index] !== " ") {
-              scrambleCharsRef.current[index] =
-                generateRandomCharacter(charset);
-            } else {
-              scrambleCharsRef.current[index] = " ";
-            }
+            scrambleCharsRef.current[index] =
+              text[index] === " " ? " " : generateRandomCharacter(charset);
           }
         }
+
         lastFlipTimeRef.current = now;
       }
 
@@ -118,6 +116,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
 
     return () => {
       isCancelled = true;
+
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
@@ -129,33 +128,38 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
   return (
     <motion.span
       ref={ref}
-      className={cn("relative inline-block align-baseline overflow-visible", className)}
+      className={cn(
+        "relative inline-block align-baseline overflow-visible",
+        className
+      )}
       aria-label={text}
       role="text"
     >
-      {/* Keeps layout fixed to the final text size while animation runs above it. */}
       <span aria-hidden="true" className={cn("invisible", revealedClassName)}>
         {text}
       </span>
 
-      {/* Absolute overlay can visually overflow without affecting nearby layout. */}
       <span
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-visible whitespace-pre"
       >
         {text.split("").map((char, index) => {
-          const isRevealed = index < revealCount;
-          const displayChar = isRevealed
+          const isRevealed = hasStarted && index < revealCount;
+
+          const displayChar = !hasStarted
             ? char
-            : char === " "
-              ? " "
-              : (scrambleCharsRef.current[index] ??
-                generateRandomCharacter(charset));
+            : isRevealed
+              ? char
+              : char === " "
+                ? " "
+                : scrambleCharsRef.current[index] ?? char;
 
           return (
             <span
               key={index}
-              className={cn(isRevealed ? revealedClassName : encryptedClassName)}
+              className={cn(
+                isRevealed ? revealedClassName : encryptedClassName
+              )}
             >
               {displayChar}
             </span>
