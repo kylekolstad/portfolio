@@ -248,11 +248,11 @@ function tokenizeBash(text: string): Token[] {
 const tokenColors: Record<TokenType, string> = {
   command: "text-[var(--accent-green)]",
   flag: "text-[var(--accent-indigo)] dark:text-[var(--accent-blue)]",
-  string: "text-[var(--accent-violet)]",
+  string: "text-[var(--accent-indigo)]",
   number: "text-[var(--accent-indigo)]",
   operator: "text-muted-foreground",
   path: "text-[var(--accent-cyan)]",
-  variable: "text-[var(--accent-violet)]",
+  variable: "text-[var(--accent-indigo)]",
   comment: "text-muted-foreground dark:text-neutral-500",
   default: "text-foreground dark:text-neutral-300",
 };
@@ -532,11 +532,11 @@ export function Terminal({
 
   const prompt = (
     <span className="text-muted-foreground dark:text-neutral-500">
-      <span className="text-[var(--accent-violet)]">
+      <span className="text-[var(--accent-indigo)]">
         {username}
       </span>
-      <span className="text-[var(--accent-violet)]">:</span>
-      <span className="text-[var(--accent-violet)]">~</span>
+      <span className="text-[var(--accent-indigo)]">:</span>
+      <span className="text-[var(--accent-indigo)]">~</span>
       <span className="text-muted-foreground dark:text-neutral-500">$</span>{" "}
     </span>
   );

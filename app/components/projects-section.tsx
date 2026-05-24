@@ -25,22 +25,25 @@ import { EncryptedText } from "@/components/ui/encrypted-text";
 
 export function ProjectsSection() {
   const [commandStarted, setCommandStarted] = useState(false);
+  const githubUrl = "https://github.com/kylekolstad";
+  const contactHref = "#contact";
 
   const featuredProject = {
     title: "Enterprise Knowledge Assistant",
+    status: "In Progress",
     description:
       "Retrieval-Augmented Generation (RAG) platform for document search and contextual Q&A using vector search and LLM APIs.",
     bullets: [
       {
-        text: "Designed secure ingestion flows for documents, embeddings, and metadata indexing",
+        text: "Architecting secure backend APIs for document ingestion, embeddings, and query workflows",
         icon: ShieldCheck,
       },
       {
-        text: "Built retrieval pipelines that ground responses in source documents instead of generic model output",
+        text: "Implementing retrieval pipelines that ground responses in source documents instead of generic model output",
         icon: SearchCheck,
       },
       {
-        text: "Structured the backend for authenticated access, reusable APIs, and enterprise-scale search workflows",
+        text: "Designing authenticated workflows for enterprise-scale knowledge access",
         icon: Network,
       },
     ],
@@ -49,6 +52,7 @@ export function ProjectsSection() {
       "LLM APIs",
       "Vector Search",
       "RAG",
+      "Prompt Engineering",
       "REST APIs",
       "PostgreSQL",
     ],
@@ -58,20 +62,23 @@ export function ProjectsSection() {
       { label: "Database", icon: Database },
       { label: "Auth", icon: Lock },
     ],
+    caseStudyHref: contactHref,
+    codeHref: githubUrl,
   };
 
   const projects = [
     {
       title: "Intelligent Document Automation",
+      status: "In Progress",
       description:
         "AI-powered document extraction service that converts PDFs into structured data using LLM APIs.",
       bullets: [
         {
-          text: "Converted unstructured PDFs into clean, structured data for downstream systems",
+          text: "Developing automated pipelines for ingestion, inference, and downstream system integration",
           icon: FileJson,
         },
         {
-          text: "Created secure API workflows for ingestion, extraction, review, and integration",
+          text: "Enabling secure REST API integration for document intelligence workflows across enterprise applications",
           icon: Workflow,
         },
       ],
@@ -80,9 +87,12 @@ export function ProjectsSection() {
         { label: "API", icon: Server },
         { label: "AI", icon: Cpu },
       ],
+      demoHref: contactHref,
+      codeHref: githubUrl,
     },
     {
       title: "Enterprise Integration Services",
+      status: "In Progress",
       description:
         "Java-based integration services for complex workflows, supporting scalable production automation and secure data exchange.",
       bullets: [
@@ -100,6 +110,8 @@ export function ProjectsSection() {
         { label: "Cloud", icon: Cloud },
         { label: "Automation", icon: Server },
       ],
+      demoHref: contactHref,
+      codeHref: githubUrl,
     },
     {
       title: "Reusable Component Framework",
@@ -120,6 +132,8 @@ export function ProjectsSection() {
         { label: "Frontend", icon: Terminal },
         { label: "Backend", icon: Server },
       ],
+      demoHref: contactHref,
+      codeHref: githubUrl,
     },
   ];
 
@@ -186,24 +200,28 @@ export function ProjectsSection() {
                 <CardBody className="h-auto w-full rounded-xl border-t-2 border-t-[var(--accent-indigo)] border-x border-b border-border/80 bg-card/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-border hover:bg-card hover:shadow-xl dark:hover:shadow-emerald-500/[0.08]">
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-[0.035] transition-opacity duration-500 group-hover:opacity-[0.06]" />
 
-            <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-12 items-start [transform-style:preserve-3d]">
+            <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-10 items-start [transform-style:preserve-3d]">
               <div className="flex-1 min-w-0 w-full">
                 <div className="mb-6">
-                  <CardItem
-                    translateZ={35}
-                    className="mb-3 inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-indigo)]"
-                  >
-                    <Award className="w-3.5 h-3.5" />
-                    spotlight_build
-                  </CardItem>
+                  <div className="mb-3 flex items-center justify-between gap-3">
+                    <CardItem
+                      translateZ={35}
+                      className="inline-flex items-center gap-2 text-xs font-mono text-[var(--accent-indigo)]"
+                    >
+                      <Award className="w-3.5 h-3.5" />
+                      spotlight_build
+                    </CardItem>
+                  </div>
 
-                  <CardItem
-                    translateZ={50}
-                    as="h3"
-                    className="text-xl sm:text-2xl font-semibold mb-3 group-hover:text-[var(--accent-indigo)] transition-colors"
-                  >
-                    {featuredProject.title}
-                  </CardItem>
+                  <div className="mb-3">
+                    <CardItem
+                      translateZ={50}
+                      as="h3"
+                      className="text-xl sm:text-2xl font-semibold group-hover:text-[var(--accent-indigo)] transition-colors"
+                    >
+                      {featuredProject.title}
+                    </CardItem>
+                  </div>
 
                   <CardItem
                     translateZ={45}
@@ -243,6 +261,7 @@ export function ProjectsSection() {
                       <span>{item.label}</span>
                     </div>
                   ))}
+
                 </CardItem>
 
                 <CardItem translateZ={25} className="flex flex-wrap gap-2 mb-8">
@@ -257,64 +276,97 @@ export function ProjectsSection() {
                 </CardItem>
 
                 <CardItem translateZ={35} className="flex flex-wrap gap-3">
-                  <button className="px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5">
+                  <a
+                    href={featuredProject.caseStudyHref}
+                    className="px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+                  >
                     Case Study
                     <ExternalLink className="w-4 h-4" />
-                  </button>
+                  </a>
 
-                  <button className="px-4 py-2 border border-border rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
+                  <a
+                    href={featuredProject.codeHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 border border-border rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5"
+                  >
                     <Github className="w-4 h-4" />
                     GitHub
-                  </button>
+                  </a>
                 </CardItem>
               </div>
 
-              {/* Mini System Map */}
+              {/* Project Snapshot */}
+
               <CardItem
                 translateZ={80}
-                className="hidden md:flex lg:w-[320px] shrink-0 bg-background/50 rounded-xl p-4 md:p-6 border border-border/50 h-fit w-full flex flex-col min-w-0 overflow-hidden transition-all duration-300 group-hover:border-border group-hover:bg-background/70 group-hover:shadow-xl"
+                className="hidden md:flex lg:w-[410px] xl:w-[460px] shrink-0 bg-muted/50 rounded-xl p-4 md:p-6 border border-border h-fit w-full flex-col min-w-0 overflow-hidden transition-all duration-300 group-hover:bg-muted/60 group-hover:shadow-xl"
               >
-                <div className="text-xs font-mono text-muted-foreground mb-8 flex items-center gap-2">
-                  system_architecture
+                <div className="mb-5 flex flex-col gap-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <div className="text-xs font-mono text-muted-foreground">
+                        project_snapshot
+                      </div>
+                      <div className="mt-2 text-lg font-semibold text-foreground">
+                        RAG platform in development
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-1">
+                      {featuredProject.status ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-md border border-border/50 bg-muted/50 px-2 py-0.5 text-xs font-mono text-muted-foreground">
+                          <span className="h-1.5 w-1.5 rounded-full bg-yellow-500/80" />
+                          {featuredProject.status}
+                        </span>
+                      ) : (
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[var(--accent-indigo)]/30 bg-[var(--accent-indigo)]/10 text-[var(--accent-indigo)]">
+                          <SearchCheck className="h-5 w-5" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
-                <div className="relative flex-1 flex flex-col items-center justify-between py-2 gap-6">
-                  <motion.div
-                    className="absolute top-2 bottom-2 left-1/2 w-px bg-border/80 -translate-x-1/2"
-                    animate={{ opacity: [0.4, 1, 0.4] }}
-                    transition={{
-                      duration: 2.4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-
-                  <div className="relative z-10 px-4 py-2 bg-card/80 backdrop-blur-sm border border-[var(--accent-indigo)]/40 rounded-lg shadow-sm text-xs font-mono flex items-center gap-2 text-[var(--accent-indigo)] transition-all duration-300 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1">
-                    <Cloud className="w-3.5 h-3.5" />
-                    API Gateway
-                  </div>
-
-                  <div className="relative z-10 w-full flex justify-between px-2">
-                    <div className="absolute top-1/2 left-1/2 w-2/3 h-px bg-border/80 -translate-x-1/2 -translate-y-1/2 -z-10" />
-
-                    <div className="px-3 py-1.5 bg-card/80 backdrop-blur-sm border border-border/80 rounded text-[10px] font-mono flex items-center gap-1.5 text-foreground shadow-sm transition-all duration-300 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1">
-                      <Server className="w-3 h-3 text-muted-foreground" />
-                      Core Services
+                <div className="grid grid-cols-2 gap-2 border-y border-border/50 py-4">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                      Mode
                     </div>
+                    <div className="mt-1 text-sm font-medium">Document Q&A</div>
+                  </div>
 
-                    <div className="px-3 py-1.5 bg-card/80 backdrop-blur-sm border border-border/80 rounded text-[10px] font-mono flex items-center gap-1.5 text-teal-600 dark:text-teal-400 shadow-sm transition-all duration-300 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1">
-                      <Lock className="w-3 h-3" />
-                      OAuth
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                      Access
                     </div>
+                    <div className="mt-1 text-sm font-medium">Authenticated</div>
                   </div>
 
-                  <div className="relative z-10 px-4 py-2 bg-card/80 backdrop-blur-sm border border-[var(--accent-violet)]/40 rounded-lg shadow-sm text-xs font-mono flex items-center gap-2 text-[var(--accent-violet)] transition-all duration-300 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1">
-                    <Database className="w-3.5 h-3.5" />
-                    PostgreSQL Cluster
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                      Retrieval
+                    </div>
+                    <div className="mt-1 text-sm font-medium">Vector search</div>
                   </div>
 
-                  <div className="relative z-10 px-4 py-1.5 bg-transparent border border-dashed border-muted-foreground/40 rounded text-[10px] font-mono flex items-center gap-2 text-muted-foreground transition-all duration-300 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1">
-                    Vendor APIs (SFTP)
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+                      Backend
+                    </div>
+                    <div className="mt-1 text-sm font-medium">REST APIs</div>
+                  </div>
+                </div>
+
+                <div className="mt-5 space-y-3 text-xs text-muted-foreground">
+                  <div className="flex items-start gap-2">
+                    <Database className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--accent-indigo)]" />
+                    <span>Embeddings, document metadata, and source references stay queryable.</span>
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-teal-500" />
+                    <span>Responses are grounded in indexed sources instead of loose model output.</span>
                   </div>
                 </div>
               </CardItem>
@@ -352,9 +404,18 @@ export function ProjectsSection() {
                           {project.title}
                         </CardItem>
 
-                        <CardItem translateZ={45}>
-                          <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </CardItem>
+                        <div className="flex items-center gap-2 shrink-0">
+                          {project.status ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-md border border-border/50 bg-muted/50 px-2 py-0.5 text-[11px] font-mono text-muted-foreground">
+                              <span className="h-1.5 w-1.5 rounded-full bg-yellow-500/80" />
+                              {project.status}
+                            </span>
+                          ) : null}
+
+                          <CardItem translateZ={45}>
+                            <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </CardItem>
+                        </div>
                       </div>
 
                       <CardItem
@@ -400,15 +461,23 @@ export function ProjectsSection() {
                       translateZ={35}
                       className="relative flex gap-2 pt-4 border-t border-border/50 mt-auto w-full"
                     >
-                      <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
+                      <a
+                        href={project.demoHref}
+                        className="flex-1 flex items-center justify-center gap-2 py-2 bg-foreground text-background rounded-lg text-sm font-medium transition-all duration-300 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+                      >
                         <ExternalLink className="w-4 h-4" />
                         Demo
-                      </button>
+                      </a>
 
-                      <button className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5">
+                      <a
+                        href={project.codeHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5"
+                      >
                         <Github className="w-4 h-4" />
                         Code
-                      </button>
+                      </a>
                     </CardItem>
                   </CardBody>
                 </CardContainer>
@@ -424,10 +493,15 @@ export function ProjectsSection() {
             transition={{ delay: 0.25, duration: 0.4 }}
             className="mt-10 flex justify-center"
           >
-            <button className="group inline-flex items-center gap-2 px-5 py-3 bg-card/80 backdrop-blur-sm border border-border/80 rounded-xl text-sm font-medium shadow-sm transition-all duration-300 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1">
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-indigo)] text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-lg shadow-[var(--glow-indigo)] hover:bg-[var(--accent-indigo)]/90 hover:shadow-xl hover:-translate-y-0.5"
+            >
               View all projects
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-            </button>
+            </a>
           </motion.div>
         </motion.div>
       </div>

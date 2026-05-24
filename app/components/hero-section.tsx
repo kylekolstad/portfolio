@@ -56,9 +56,9 @@ export function HeroSection() {
             </h1>
 
             <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed max-w-lg">
-              Software engineer specializing in backend systems, APIs, cloud
-              infrastructure, and applied AI. I build systems that scale
-              cleanly.
+              Software engineer specializing in scalable backend systems,
+              enterprise APIs, cloud infrastructure, and applied AI. I build
+              production services that move data reliably.
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -98,12 +98,12 @@ export function HeroSection() {
                   "name: Kyle Kolstad",
                   "role: Software Engineer",
                   "experience: 6+ years",
-                  "focus: Backend Systems, APIs, Cloud Infrastructure, Applied AI",
+                  "focus: Backend Systems, APIs, Enterprise Integrations, Applied AI",
                 ],
                 1: [
                   "{",
                   '  "stack": [',
-                  '    "Java", "Spring Boot", "React", "TypeScript", "Docker"',
+                  '    "Java", "Python", "SQL", "Spring Boot", "Docker"',
                   "  ]",
                   "}",
                 ],

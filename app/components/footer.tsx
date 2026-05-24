@@ -38,7 +38,7 @@ export function Footer() {
             <span className="hidden sm:inline text-border">|</span>
 
             <span>
-              © {new Date().getFullYear()} Kyle Kolstad. Built with React,
+              &copy; {new Date().getFullYear()} Kyle Kolstad. Built with React,
               Tailwind, and attention to detail.
             </span>
           </div>
@@ -47,7 +47,7 @@ export function Footer() {
             <a
               href="mailto:kylekolstad@gmail.com"
               aria-label="Email"
-              className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
+              className="p-2 rounded-lg text-foreground/80 transition-colors duration-300 hover:text-[var(--accent-indigo)]"
             >
               <Mail className="w-4 h-4" />
             </a>
@@ -57,7 +57,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
+              className="p-2 rounded-lg text-foreground/80 transition-colors duration-300 hover:text-[var(--accent-indigo)]"
             >
               <Github className="w-4 h-4" />
             </a>
@@ -67,7 +67,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="p-2 rounded-lg text-foreground/80 transition-all duration-300 hover:text-[var(--accent-violet)] hover:bg-background/70 hover:shadow-sm"
+              className="p-2 rounded-lg text-foreground/80 transition-colors duration-300 hover:text-[var(--accent-indigo)]"
             >
               <Linkedin className="w-4 h-4" />
             </a>

@@ -15,14 +15,14 @@ export function AboutSection() {
       label: "/now-building",
       title: "Current Focus",
       description:
-        "Building scalable backend systems, enterprise integrations, and AI-powered automation tools for real operational workflows.",
+        "Building scalable backend systems, enterprise integrations, and AI-enabled automation tools for real operational workflows.",
     },
     {
       icon: Code2,
       label: "/technical-range",
       title: "Core Strengths",
       description:
-        "API design, system architecture, database-backed applications, cloud infrastructure, and secure integration development.",
+        "API design, cross-system architecture, database-backed applications, cloud infrastructure, and secure integration development.",
     },
     {
       icon: Layers,
@@ -70,17 +70,17 @@ export function AboutSection() {
             <div className="max-w-3xl">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
                 <EncryptedText
-                  text="Building software that matters"
+                  text="What I Build"
                   encryptedClassName="text-muted-foreground"
                   revealedClassName="text-foreground"
                 />
               </h2>
 
               <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
-                I'm a backend-focused software engineer with 6+ years of
-                experience building production systems, APIs, integrations, and
-                automation workflows. I care about software that is reliable,
-                understandable, and useful beyond the first release.
+                I'm a software engineer with 6+ years of experience building
+                scalable backend systems, APIs, enterprise integrations, and
+                production automation workflows. I care about software that is
+                reliable, understandable, and useful beyond the first release.
               </p>
             </div>
           </div>

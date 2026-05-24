@@ -2,40 +2,43 @@
 
 import { motion } from "motion/react";
 import { Lock, FileDown, Briefcase, Terminal, Globe } from "lucide-react";
+import type { ComponentType } from "react";
 import { useState } from "react";
 import {
-  SiSpringboot,
-  SiPostgresql,
-  SiTypescript,
-  SiTailwindcss,
-  SiPostman,
-  SiVite,
-  SiNextdotjs,
-  SiGooglecloud,
-  SiOpenai,
-} from "react-icons/si";
-import {
-  FaJava,
-  FaReact,
-  FaDocker,
-  FaGitAlt,
-  FaLinux,
-  FaNodeJs,
-  FaGithub,
-  FaAws,
-  FaPython,
-} from "react-icons/fa";
-import { VscAzure } from "react-icons/vsc";
+  AwsIcon,
+  DockerIcon,
+  GitHubActionsIcon,
+  GitIcon,
+  GoogleCloudIcon,
+  HuggingFaceIcon,
+  JavaIcon,
+  LangChainIcon,
+  LinuxIcon,
+  NextJsIcon,
+  NodeJsIcon,
+  OpenAiIcon,
+  PostgreSqlIcon,
+  PostmanIcon,
+  PythonIcon,
+  ReactIcon,
+  RedisIcon,
+  SpringBootIcon,
+  TailwindCssIcon,
+  TypeScriptIcon,
+  ViteIcon,
+  type BrandIconProps,
+} from "./icons/brand-icons";
 import { TypingCommand } from "./ui/typing-command";
 import { Terminal as RuntimeTerminal } from "@/components/ui/terminal";
 import { EncryptedText } from "@/components/ui/encrypted-text";
 import { CodeFile, type CodeFileLine } from "@/components/ui/code-file";
 import { WindowFrame } from "@/components/ui/window-frame";
 
+type SliderIcon = ComponentType<BrandIconProps>;
+
 export function TechStackSection() {
   const [sectionCommandStarted, setSectionCommandStarted] = useState(false);
   const [showBrowserWindow, setShowBrowserWindow] = useState(false);
-  const [showRunningStatus, setShowRunningStatus] = useState(false);
   const [isSliderPaused, setIsSliderPaused] = useState(false);
 
   const stackConfig = {
@@ -43,9 +46,10 @@ export function TechStackSection() {
     backend: ["Spring Boot", "REST APIs", "OAuth2/JWT", "Node.js"],
     cloud_devops: ["AWS", "Docker", "CI/CD", "Linux", "Git"],
     data: ["PostgreSQL", "ETL", "Data Pipelines", "SQL"],
-    ai_ml: ["LLMs", "RAG", "Vector Search", "AI APIs"],
+    ai_ml: ["LLMs", "RAG", "Vector Search", "Prompt Engineering", "AI APIs"],
     enterprise: [
       "Workday",
+      "Workday Studio",
       "Constituo",
       "XML",
       "XSLT",
@@ -53,44 +57,46 @@ export function TechStackSection() {
     ],
   };
 
-  const row1 = [
-    { name: "Java", icon: FaJava, color: "text-[#007396]" },
-    { name: "Spring Boot", icon: SiSpringboot, color: "text-[#6DB33F]" },
-    { name: "PostgreSQL", icon: SiPostgresql, color: "text-[#4169E1]" },
-    { name: "React", icon: FaReact, color: "text-[#61DAFB]" },
-    { name: "TypeScript", icon: SiTypescript, color: "text-[#3178C6]" },
-    { name: "Tailwind CSS", icon: SiTailwindcss, color: "text-[#06B6D4]" },
-    { name: "Docker", icon: FaDocker, color: "text-[#2496ED]" },
-    { name: "Git", icon: FaGitAlt, color: "text-[#F05032]" },
-    { name: "Postman", icon: SiPostman, color: "text-[#FF6C37]" },
-    { name: "Linux", icon: FaLinux, color: "text-[#FCC624]" },
+  const row1: Array<{ name: string; icon: SliderIcon; color: string }> = [
+    { name: "Java", icon: JavaIcon, color: "text-[#007396]" },
+    { name: "Spring Boot", icon: SpringBootIcon, color: "text-[#6DB33F]" },
+    { name: "PostgreSQL", icon: PostgreSqlIcon, color: "text-[#4169E1]" },
+    { name: "React", icon: ReactIcon, color: "text-[#61DAFB]" },
+    { name: "TypeScript", icon: TypeScriptIcon, color: "text-[#3178C6]" },
+    { name: "Tailwind CSS", icon: TailwindCssIcon, color: "text-[#06B6D4]" },
+    { name: "Docker", icon: DockerIcon, color: "text-[#2496ED]" },
+    { name: "Git", icon: GitIcon, color: "text-[#F05032]" },
+    { name: "Postman", icon: PostmanIcon, color: "text-[#FF6C37]" },
+    { name: "Linux", icon: LinuxIcon, color: "text-[#FCC624]" },
   ];
 
-  const row2 = [
-    { name: "Node.js", icon: FaNodeJs, color: "text-[#5FA04E]" },
-    { name: "Vite", icon: SiVite, color: "text-[#646CFF]" },
-    { name: "Next.js", icon: SiNextdotjs, color: "text-[#000000] dark:text-[#FFFFFF]" },
+  const row2: Array<{ name: string; icon: SliderIcon; color: string }> = [
+    { name: "Node.js", icon: NodeJsIcon, color: "text-[#5FA04E]" },
+    { name: "Vite", icon: ViteIcon, color: "text-[#646CFF]" },
+    { name: "Next.js", icon: NextJsIcon, color: "text-[#000000]" },
     {
-      name: "GitHub Actions",
-      icon: FaGithub,
-      color: "text-[#181717] dark:text-[#FFFFFF]",
+      name: "GitHub",
+      icon: GitHubActionsIcon,
+      color: "text-[#000000] dark:text-[#FFFFFF]",
     },
-    { name: "AWS", icon: FaAws, color: "text-[#FF9900]" },
-    { name: "GCP", icon: SiGooglecloud, color: "text-[#4285F4]" },
-    { name: "Azure", icon: VscAzure, color: "text-[#0078D4]" },
+    { name: "AWS", icon: AwsIcon, color: "text-[#FF9900]" },
+    { name: "GCP", icon: GoogleCloudIcon, color: "text-[#4285F4]" },
     {
       name: "OpenAI",
-      icon: SiOpenai,
-      color: "text-[#412991] dark:text-[#A78BFA]",
+      icon: OpenAiIcon,
+      color: "text-[#000000] dark:text-[#FFFFFF]",
     },
-    { name: "Python", icon: FaPython, color: "text-[#3776AB]" },
+    { name: "LangChain", icon: LangChainIcon, color: "text-[#1C3C3C]" },
+    { name: "Hugging Face", icon: HuggingFaceIcon, color: "" },
+    { name: "Redis", icon: RedisIcon, color: "" },
+    { name: "Python", icon: PythonIcon, color: "text-[#3776AB]" },
     { name: "OAuth", icon: Lock, color: "text-muted-foreground" },
     { name: "SFTP", icon: FileDown, color: "text-muted-foreground" },
     { name: "Workday APIs", icon: Briefcase, color: "text-[#0875BE]" },
   ];
 
   const syntax = {
-    keyword: "text-[#AF00DB] dark:text-[#C586C0]",
+    keyword: "text-[var(--accent-indigo)]",
     variable: "text-[#001080] dark:text-[#9CDCFE]",
     property: "text-[#0451A5] dark:text-[#9CDCFE]",
     string: "text-[#A31515] dark:text-[#CE9178]",
@@ -179,10 +185,6 @@ export function TechStackSection() {
     window.setTimeout(() => {
       setShowBrowserWindow(true);
     }, 500);
-
-    window.setTimeout(() => {
-      setShowRunningStatus(true);
-    }, 900);
   }
 
   return (
@@ -335,9 +337,12 @@ export function TechStackSection() {
                                     onBlur={() => setIsSliderPaused(false)}
                                     className="flex items-center gap-2.5 sm:gap-4 px-4 sm:px-6 py-2.5 sm:py-3.5 bg-card/80 backdrop-blur-sm border border-border/80 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1 transition-all duration-300 rounded-2xl shadow-sm shrink-0"
                                   >
-                                    <tech.icon
-                                      className={`w-5 h-5 sm:w-8 sm:h-8 ${tech.color}`}
-                                    />
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center sm:h-9 sm:w-9">
+                                      <tech.icon
+                                        size="100%"
+                                        className={`h-full w-full ${tech.color}`}
+                                      />
+                                    </span>
 
                                     <span className="text-sm sm:text-lg font-medium text-foreground whitespace-nowrap">
                                       {tech.name}
@@ -373,9 +378,12 @@ export function TechStackSection() {
                                     onBlur={() => setIsSliderPaused(false)}
                                     className="flex items-center gap-2.5 sm:gap-4 px-4 sm:px-6 py-2.5 sm:py-3.5 bg-card/80 backdrop-blur-sm border border-border/80 hover:border-border hover:bg-card hover:shadow-md hover:-translate-y-1 transition-all duration-300 rounded-2xl shadow-sm shrink-0"
                                   >
-                                    <tech.icon
-                                      className={`w-5 h-5 sm:w-8 sm:h-8 ${tech.color}`}
-                                    />
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center sm:h-9 sm:w-9">
+                                      <tech.icon
+                                        size="100%"
+                                        className={`h-full w-full ${tech.color}`}
+                                      />
+                                    </span>
 
                                     <span className="text-sm sm:text-lg font-medium text-foreground whitespace-nowrap">
                                       {tech.name}

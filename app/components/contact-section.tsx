@@ -62,7 +62,7 @@ export function ContactSection() {
           <div className="flex flex-wrap justify-center gap-4 mb-12">
             <a
               href="mailto:kylekolstad@gmail.com"
-              className="px-6 py-3 bg-foreground text-background rounded-lg font-medium transition-all duration-300 flex items-center gap-2 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+              className="px-6 py-3 bg-[var(--accent-indigo)] text-white rounded-lg font-medium transition-all duration-300 flex items-center gap-2 shadow-lg shadow-[var(--glow-indigo)] hover:bg-[var(--accent-indigo)]/90 hover:shadow-xl hover:-translate-y-0.5"
             >
               <Mail className="w-4 h-4" />
               kylekolstad@gmail.com
@@ -106,8 +106,8 @@ export function ContactSection() {
               outputs={{
                 0: [
                   "location: Green Bay, WI",
-                  "status: Open to relocation",
-                  "status: Available",
+                  "status: Available for backend engineering roles",
+                  "focus: APIs, integrations, cloud infrastructure, applied AI",
                 ],
               }}
               typingSpeed={35}

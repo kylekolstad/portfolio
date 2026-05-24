@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import { Download, Terminal } from "lucide-react";
 import { useState } from "react";
 import { TypingCommand } from "./ui/typing-command";
-import { LinkPreview } from "@/components/ui/link-preview";
+import { Experience } from "./ui/experience";
 import { EncryptedText } from "@/components/ui/encrypted-text";
 import { WindowFrame } from "@/components/ui/window-frame";
 
@@ -14,32 +14,35 @@ export function ExperienceSection() {
   const experiences = [
     {
       date: "2024 - Present",
-      role: "Backend Engineer (Integration & Automation)",
+      title: "Backend Engineer",
+      subTitle: "Integration & Automation",
       org: "St. Norbert College",
       orgUrl: "https://www.snc.edu",
       bullets: [
         "Delivered 25 integrations within a 500+ enterprise ecosystem, enabling secure, high-volume data exchange across enterprise platforms.",
         "Engineered Java-based integration services for complex workflows, supporting scalable production automation and reliable system interoperability.",
-        "Architected scalable Spring Boot REST APIs that centralized institutional data into a single source of truth, reducing dependency on 50+ systems.",
-        "Implemented fault-tolerant automation pipelines with monitoring, logging, and error recovery, improving system reliability.",
+        "Architected scalable Spring Boot REST APIs that centralized institutional data into a single source of truth, reducing dependency on 50+ systems and supporting secure data processing.",
+        "Implemented fault-tolerant automation pipelines with monitoring, logging, and error recovery, improving reliability across enterprise integrations.",
       ],
-      tags: ["Java", "Spring Boot", "REST APIs", "Workday", "Automation"],
+      tags: ["Java", "Spring Boot", "REST APIs", "Workday Studio", "Automation"],
     },
     {
       date: "2020 - 2023",
-      role: "Software Engineer (Full Stack)",
+      title: "Software Engineer",
+      subTitle: "Full Stack",
       org: "Envano",
       orgUrl: "https://www.envano.com",
       bullets: [
-        "Developed custom web applications and backend APIs for high-traffic digital platforms, supporting scalable and performant solutions.",
-        "Optimized backend services integrating external APIs, CMS platforms, and commerce systems, improving performance and system scalability.",
-        "Created a reusable component library and website framework that reduced typical project staffing from 3 developers to 1, accelerating delivery.",
+        "Developed custom web applications and backend APIs for high-traffic digital platforms, supporting e-commerce and multi-location businesses.",
+        "Optimized backend services integrating external APIs, CMS platforms, and commerce systems, improving performance, responsiveness, and scalability.",
+        "Created a reusable component library and website framework that reduced typical project staffing from 3 developers to 1, accelerating delivery and improving engineering efficiency.",
       ],
       tags: ["Node.js", "TypeScript", "React", "APIs", "CMS"],
     },
     {
       date: "2020",
-      role: "Software Engineer (Backend)",
+      title: "Software Engineer",
+      subTitle: "Backend",
       org: "Cognizant",
       orgUrl: "https://www.cognizant.com",
       bullets: [
@@ -49,15 +52,23 @@ export function ExperienceSection() {
     },
     {
       date: "2019 - 2020",
-      role: "Software Engineer (Full Stack)",
+      title: "Software Engineer",
+      subTitle: "Full Stack",
       org: "Revature",
       orgUrl: "https://www.revature.com",
       bullets: [
-        "Built collaborative full-stack applications in an accelerated software engineering environment focused on enterprise development practices.",
+        "Built collaborative full-stack applications in an accelerated software engineering environment focused on enterprise development practices and client delivery readiness.",
         "Produced internal projects using Java, Spring Framework, Angular, Node.js, JavaScript, HTML, and CSS, delivering production-style solutions in agile team environments.",
       ],
       tags: ["Java", "Spring Framework", "Angular", "Node.js", "Agile"],
     },
+    {
+      date: "2011 - 2015",
+      title: "Bachelor of Science",
+      subTitle: "Computer Science | Minor in Business (AACSB Accredited)",
+      org: "University of Wisconsin-River Falls",
+      orgUrl: "https://www.uwrf.edu",
+    }
   ];
 
   return (
@@ -102,7 +113,7 @@ export function ExperienceSection() {
               href="https://files.kylekolstad.com/portfolio/resume/Kyle_Kolstad_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 px-5 py-3 border border-border rounded-lg text-sm font-medium transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-1"
+              className="mt-5 inline-flex items-center gap-2 px-5 py-3 bg-[var(--accent-indigo)] text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-lg shadow-[var(--glow-indigo)] hover:bg-[var(--accent-indigo)]/90 hover:shadow-xl hover:-translate-y-0.5"
             >
               <Download className="w-4 h-4" />
               View Resume
@@ -115,67 +126,18 @@ export function ExperienceSection() {
           >
             <div className="p-6 md:p-8 space-y-12">
               {experiences.map((exp, index) => (
-                <motion.div
-                  key={`${exp.org}-${exp.date}`}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{
-                    delay: index * 0.1,
-                    duration: 0.4,
-                  }}
-                >
-                  <div className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-4 mb-3 md:mb-4">
-                    <span className="text-[var(--accent-indigo)] font-bold text-sm shrink-0 md:w-32">
-                      [{exp.date}]
-                    </span>
-
-                    <div className="flex-1">
-                      <span className="text-foreground font-bold text-base block sm:inline">
-                        {exp.role}
-                      </span>
-
-                      <span className="text-[var(--accent-green)] sm:ml-2 text-sm sm:text-base">
-                        @{" "}
-                        <LinkPreview
-                          url={exp.orgUrl}
-                          className="font-bold !text-[var(--accent-green)]"
-                        >
-                          {exp.org}
-                        </LinkPreview>
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="ml-2 pl-4 border-l border-border md:border-none md:pl-0 md:ml-[144px]">
-                    <ul className="space-y-3 text-muted-foreground relative md:before:absolute md:before:inset-y-0 md:before:-left-4 md:before:w-px md:before:bg-border mb-4">
-                      {exp.bullets.map((bullet, bIndex) => (
-                        <li
-                          key={bIndex}
-                          className="relative before:absolute before:w-2 md:before:h-px before:h-0 md:before:bg-border before:-left-4 before:top-2.5 list-disc md:list-none ml-4 md:ml-0"
-                        >
-                          <span className="relative -left-2 md:left-0 block">
-                            {bullet}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className="flex flex-wrap gap-2">
-                      {exp.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-[11px] px-2 py-0.5 bg-accent/50 border border-border/50 rounded text-muted-foreground"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
+                <Experience
+                  key={index}
+                  date={exp.date}
+                  title={exp.title}
+                  org={exp.org}
+                  orgUrl={exp.orgUrl}
+                  bullets={exp.bullets}
+                  tags={exp.tags}
+                  subTitle={exp.subTitle}
+                />
               ))}
             </div>
-
             {/* Simple Log Footer */}
             <div className="bg-muted/10 border-t border-border px-6 py-4 flex items-center gap-2 text-muted-foreground text-xs">
               <span className="text-teal-500 animate-pulse">_</span>
