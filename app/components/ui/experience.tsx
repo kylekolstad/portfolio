@@ -46,7 +46,7 @@ export function Experience({
             <span className="text-[var(--accent-green)] sm:ml-2 text-sm sm:text-base">
               @{" "}
               <LinkPreview
-                url={orgUrl}
+                url={orgUrl ?? ""}
                 className="font-bold !text-[var(--accent-green)]"
               >
                 {org}
