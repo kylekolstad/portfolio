@@ -4,6 +4,7 @@ import { Github, Linkedin, Mail, Terminal } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { TypingCommand } from "./ui/typing-command";
+import { sectionViewport, smoothSpring, softCardReveal } from "@/lib/motion";
 
 export function Footer() {
   const [commandStarted, setCommandStarted] = useState(false);
@@ -12,10 +13,10 @@ export function Footer() {
     <footer className="px-4 sm:px-6 py-8 overflow-x-clip">
       <div className="max-w-7xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={sectionViewport}
+          variants={softCardReveal}
           onViewportEnter={() => {
             setCommandStarted(true);
           }}
@@ -44,33 +45,42 @@ export function Footer() {
           </div>
 
           <div className="flex items-center gap-2">
-            <a
+            <motion.a
               href="mailto:kylekolstad@gmail.com"
               aria-label="Email"
-              className="p-2 rounded-lg text-foreground/80 transition-colors duration-300 hover:text-[var(--accent-indigo)]"
+              whileHover={{ y: -2, scale: 1.04, color: "var(--accent-indigo)" }}
+              whileTap={{ y: -1, scale: 0.97 }}
+              transition={smoothSpring}
+              className="p-2 rounded-lg text-foreground/80"
             >
               <Mail className="w-4 h-4" />
-            </a>
+            </motion.a>
 
-            <a
+            <motion.a
               href="https://github.com/kylekolstad"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="p-2 rounded-lg text-foreground/80 transition-colors duration-300 hover:text-[var(--accent-indigo)]"
+              whileHover={{ y: -2, scale: 1.04, color: "var(--accent-indigo)" }}
+              whileTap={{ y: -1, scale: 0.97 }}
+              transition={smoothSpring}
+              className="p-2 rounded-lg text-foreground/80"
             >
               <Github className="w-4 h-4" />
-            </a>
+            </motion.a>
 
-            <a
+            <motion.a
               href="https://linkedin.com/in/kylekolstad"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="p-2 rounded-lg text-foreground/80 transition-colors duration-300 hover:text-[var(--accent-indigo)]"
+              whileHover={{ y: -2, scale: 1.04, color: "var(--accent-indigo)" }}
+              whileTap={{ y: -1, scale: 0.97 }}
+              transition={smoothSpring}
+              className="p-2 rounded-lg text-foreground/80"
             >
               <Linkedin className="w-4 h-4" />
-            </a>
+            </motion.a>
           </div>
         </motion.div>
       </div>

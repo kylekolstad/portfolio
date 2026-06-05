@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
+import { appleEase } from "@/lib/motion";
 
 export interface CodeFileLine {
   id: string;
@@ -20,8 +22,16 @@ export function CodeFile({ lines, className }: CodeFileProps) {
       )}
     >
       {lines.map((line, index) => (
-        <div
+        <motion.div
           key={line.id}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{
+            delay: index * 0.045,
+            duration: 0.58,
+            ease: appleEase,
+          }}
           className="grid min-w-0 grid-cols-[1rem_minmax(0,1fr)] gap-2"
         >
           <span className="select-none text-right tabular-nums text-muted-foreground/45">
@@ -31,7 +41,7 @@ export function CodeFile({ lines, className }: CodeFileProps) {
           <span className="min-w-0 whitespace-pre-wrap break-words">
             {line.content}
           </span>
-        </div>
+        </motion.div>
       ))}
     </div>
   );

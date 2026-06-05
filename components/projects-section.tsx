@@ -22,6 +22,19 @@ import { useState } from "react";
 import { TypingCommand } from "./ui/typing-command";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { EncryptedText } from "@/components/ui/encrypted-text";
+import {
+  actionReveal,
+  cardReveal,
+  contentGrid,
+  copyReveal,
+  headingReveal,
+  introContainer,
+  panelReveal,
+  panelTransition,
+  sectionViewport,
+  smoothSpring,
+  terminalLabel,
+} from "@/lib/motion";
 
 export function ProjectsSection() {
   const [commandStarted, setCommandStarted] = useState(false);
@@ -32,35 +45,33 @@ export function ProjectsSection() {
     title: "Enterprise Knowledge Assistant",
     status: "In Progress",
     description:
-      "Retrieval-Augmented Generation (RAG) platform for document search and contextual Q&A using vector search and LLM APIs.",
+      "In-development RAG platform designed to make internal knowledge easier to search, verify, and reuse through source-grounded document Q&A.",
     bullets: [
       {
-        text: "Architecting secure backend APIs for document ingestion, embeddings, and query workflows",
+        text: "Built to help users find answers inside documents without manually searching across disconnected files",
         icon: ShieldCheck,
       },
       {
-        text: "Implementing retrieval pipelines that ground responses in source documents instead of generic model output",
+        text: "Designing ingestion, embeddings, and secure query workflows for controlled knowledge access",
         icon: SearchCheck,
       },
       {
-        text: "Designing authenticated workflows for enterprise-scale knowledge access",
+        text: "Aimed at improving answer trust by grounding responses in retrieved source material",
         icon: Network,
       },
     ],
     tags: [
       "Python",
-      "LLM APIs",
       "Vector Search",
       "RAG",
-      "Prompt Engineering",
-      "REST APIs",
+      "Prompt Design",
       "PostgreSQL",
     ],
     metadata: [
-      { label: "AI", icon: Cpu },
-      { label: "API", icon: Server },
-      { label: "Database", icon: Database },
-      { label: "Auth", icon: Lock },
+      { label: "Search", icon: Cpu },
+      { label: "Backend", icon: Server },
+      { label: "Sources", icon: Database },
+      { label: "Secure", icon: Lock },
     ],
     caseStudyHref: contactHref,
     codeHref: githubUrl,
@@ -68,17 +79,17 @@ export function ProjectsSection() {
 
   const projects = [
     {
-      title: "Intelligent Document Automation",
+      title: "Intelligent Document Automation Platform",
       status: "In Progress",
       description:
-        "AI-powered document extraction service that converts PDFs into structured data using LLM APIs.",
+        "In-development document automation service built to convert PDFs into structured data for downstream workflows.",
       bullets: [
         {
-          text: "Developing automated pipelines for ingestion, inference, and downstream system integration",
+          text: "Designed to reduce manual document review by automating ingestion, extraction, and downstream handoff",
           icon: FileJson,
         },
         {
-          text: "Enabling secure REST API integration for document intelligence workflows across enterprise applications",
+          text: "Aimed at making document intelligence available through secure backend workflows",
           icon: Workflow,
         },
       ],
@@ -92,22 +103,22 @@ export function ProjectsSection() {
     },
     {
       title: "Enterprise Integration Services",
-      status: "In Progress",
+      status: "Production Work",
       description:
-        "Java-based integration services for complex workflows, supporting scalable production automation and secure data exchange.",
+        "Production integration work built to move institutional data reliably across a 500+ enterprise ecosystem.",
       bullets: [
         {
-          text: "Connected enterprise systems through reliable API, SFTP, and vendor data workflows",
+          text: "Delivered 25 integrations supporting secure, high-volume data exchange across enterprise platforms",
           icon: Network,
         },
         {
-          text: "Improved production reliability with validation, logging, monitoring, and error recovery",
+          text: "Improved reliability with monitoring, logging, and error recovery for production automation pipelines",
           icon: ShieldCheck,
         },
       ],
-      tags: ["Java", "Spring Boot", "Workday", "OAuth", "SFTP"],
+      tags: ["Java", "Spring Boot", "Backend Services", "OAuth", "Automation"],
       metadata: [
-        { label: "Cloud", icon: Cloud },
+        { label: "Scale", icon: Cloud },
         { label: "Automation", icon: Server },
       ],
       demoHref: contactHref,
@@ -116,14 +127,14 @@ export function ProjectsSection() {
     {
       title: "Reusable Component Framework",
       description:
-        "Custom web applications and backend APIs for high-traffic digital platforms, supporting scalable commerce solutions.",
+        "Reusable web framework work that reduced repeated setup and made custom application delivery more efficient.",
       bullets: [
         {
-          text: "Created reusable UI and backend patterns to reduce repeated project setup",
+          text: "Reduced typical project staffing from 3 developers to 1 by standardizing repeatable build patterns",
           icon: Terminal,
         },
         {
-          text: "Integrated CMS, commerce, and external API services into maintainable web platforms",
+          text: "Supported high-traffic web platforms for e-commerce and multi-location businesses",
           icon: Database,
         },
       ],
@@ -143,17 +154,23 @@ export function ProjectsSection() {
     <section id="work" className="py-24 sm:py-32 px-4 sm:px-6 overflow-x-clip">
       <div className="max-w-7xl mx-auto w-full min-w-0">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          viewport={sectionViewport}
           onViewportEnter={() => {
             setCommandStarted(true);
           }}
           className="w-full min-w-0"
         >
-          <div className="mb-12 min-w-0">
-            <div className="flex items-center gap-2 text-sm font-mono text-[var(--accent-green)] mb-2 min-w-0">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={sectionViewport}
+            variants={introContainer()}
+            className="mb-12 min-w-0"
+          >
+            <motion.div
+              variants={terminalLabel}
+              className="flex items-center gap-2 text-sm font-mono text-[var(--accent-green)] mb-2 min-w-0"
+            >
               <Terminal className="w-4 h-4 shrink-0" />
 
               <span className="shrink-0">$</span>
@@ -161,35 +178,43 @@ export function ProjectsSection() {
               <TypingCommand
                 command="ls /projects"
                 active={commandStarted}
-                speed={35}
+                speed={28}
                 className="text-[var(--accent-green)]"
               />
-            </div>
+            </motion.div>
 
             <div className="flex flex-col gap-4">
               <div>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+                <motion.h2
+                  variants={headingReveal}
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold"
+                >
                   <EncryptedText
                     text="Featured Work"
                     encryptedClassName="text-muted-foreground"
                     revealedClassName="text-foreground"
                   />
-                </h2>
+                </motion.h2>
 
-                <p className="mt-3 text-muted-foreground text-base sm:text-lg max-w-2xl">
-                  Selected systems, tools, and engineering projects built around
-                  automation, integrations, APIs, and applied AI.
-                </p>
+                <motion.p
+                  variants={copyReveal}
+                  className="mt-3 text-muted-foreground text-base sm:text-lg max-w-2xl"
+                >
+                  Work focused on production value: reliable data movement,
+                  less manual effort, easier access to information, and systems
+                  that hold up beyond launch.
+                </motion.p>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Featured Project */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.35 }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={sectionViewport}
+            variants={panelReveal}
+            transition={{ ...panelTransition, delay: 0.24 }}
             className="mb-8"
           >
             <CardContainer
@@ -197,8 +222,8 @@ export function ProjectsSection() {
               className="w-full"
               rotationStrength={130}
             >
-                <CardBody className="h-auto w-full rounded-xl border-t-2 border-t-[var(--accent-indigo)] border-x border-b border-border/80 bg-card/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 transition-all duration-300 group relative overflow-hidden shadow-sm hover:border-border hover:bg-card hover:shadow-xl dark:hover:shadow-emerald-500/[0.08]">
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-[0.035] transition-opacity duration-500 group-hover:opacity-[0.06]" />
+                <CardBody className="apple-motion h-auto w-full rounded-xl border-t-2 border-t-[var(--accent-indigo)] border-x border-b border-border/80 bg-card/80 backdrop-blur-sm p-4 sm:p-6 md:p-8 group relative overflow-hidden shadow-sm hover:border-border hover:bg-card hover:shadow-xl dark:hover:shadow-emerald-500/[0.08]">
+                  <div className="apple-fade pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-[0.035] group-hover:opacity-[0.06]" />
 
             <div className="relative flex flex-col lg:flex-row gap-8 lg:gap-10 items-start [transform-style:preserve-3d]">
               <div className="flex-1 min-w-0 w-full">
@@ -217,7 +242,7 @@ export function ProjectsSection() {
                     <CardItem
                       translateZ={50}
                       as="h3"
-                      className="text-xl sm:text-2xl font-semibold group-hover:text-[var(--accent-indigo)] transition-colors"
+                      className="apple-color text-xl sm:text-2xl font-semibold group-hover:text-[var(--accent-indigo)]"
                     >
                       {featuredProject.title}
                     </CardItem>
@@ -255,7 +280,7 @@ export function ProjectsSection() {
                   {featuredProject.metadata.map((item) => (
                     <div
                       key={item.label}
-                      className="flex items-center gap-1.5 text-sm text-muted-foreground font-mono hover:text-foreground transition-colors"
+                      className="apple-color flex items-center gap-1.5 text-sm text-muted-foreground font-mono hover:text-foreground"
                     >
                       <item.icon className="w-4 h-4 text-[var(--accent-indigo)]" />
                       <span>{item.label}</span>
@@ -268,31 +293,37 @@ export function ProjectsSection() {
                   {featuredProject.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2.5 py-1 bg-accent/50 text-xs rounded-md font-mono text-muted-foreground border border-border/50 transition-all duration-300 hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm hover:-translate-y-0.5"
+                      className="apple-motion px-2.5 py-1 bg-accent/50 text-xs rounded-md font-mono text-muted-foreground border border-border/50 hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm hover:-translate-y-0.5"
                     >
                       {tag}
                     </span>
                   ))}
                 </CardItem>
 
-                <CardItem translateZ={35} className="flex flex-wrap gap-3">
-                  <a
+                <CardItem translateZ={35} className="flex w-full flex-col sm:flex-row flex-wrap gap-3">
+                  <motion.a
                     href={featuredProject.caseStudyHref}
-                    className="px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+                    whileHover={{ y: -3, scale: 1.01 }}
+                    whileTap={{ y: -1, scale: 0.99 }}
+                    transition={smoothSpring}
+                    className="w-full sm:w-auto justify-center px-4 py-2 bg-foreground text-background rounded-lg text-sm font-medium flex items-center gap-2"
                   >
                     Case Study
                     <ExternalLink className="w-4 h-4" />
-                  </a>
+                  </motion.a>
 
-                  <a
+                  <motion.a
                     href={featuredProject.codeHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 border border-border rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5"
+                    whileHover={{ y: -3, scale: 1.01 }}
+                    whileTap={{ y: -1, scale: 0.99 }}
+                    transition={smoothSpring}
+                    className="w-full sm:w-auto justify-center px-4 py-2 border border-border rounded-lg text-sm font-medium flex items-center gap-2"
                   >
                     <Github className="w-4 h-4" />
                     GitHub
-                  </a>
+                  </motion.a>
                 </CardItem>
               </div>
 
@@ -300,7 +331,7 @@ export function ProjectsSection() {
 
               <CardItem
                 translateZ={80}
-                className="hidden md:flex lg:w-[410px] xl:w-[460px] shrink-0 bg-muted/50 rounded-xl p-4 md:p-6 border border-border h-fit w-full flex-col min-w-0 overflow-hidden transition-all duration-300 group-hover:bg-muted/60 group-hover:shadow-xl"
+                className="apple-motion hidden md:flex lg:w-[410px] xl:w-[460px] shrink-0 bg-muted/50 rounded-xl p-4 md:p-6 border border-border h-fit w-full flex-col min-w-0 overflow-hidden group-hover:bg-muted/60 group-hover:shadow-xl"
               >
                 <div className="mb-5 flex flex-col gap-2">
                   <div className="flex items-center justify-between gap-4">
@@ -309,7 +340,7 @@ export function ProjectsSection() {
                         project_snapshot
                       </div>
                       <div className="mt-2 text-lg font-semibold text-foreground">
-                        RAG platform in development
+                        Document Q&A in development
                       </div>
                     </div>
 
@@ -354,19 +385,19 @@ export function ProjectsSection() {
                     <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
                       Backend
                     </div>
-                    <div className="mt-1 text-sm font-medium">REST APIs</div>
+                    <div className="mt-1 text-sm font-medium">Backend services</div>
                   </div>
                 </div>
 
                 <div className="mt-5 space-y-3 text-xs text-muted-foreground">
                   <div className="flex items-start gap-2">
                     <Database className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--accent-indigo)]" />
-                    <span>Embeddings, document metadata, and source references stay queryable.</span>
+                    <span>Embeddings, document metadata, and source references stay searchable.</span>
                   </div>
 
                   <div className="flex items-start gap-2">
                     <ShieldCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-teal-500" />
-                    <span>Responses are grounded in indexed sources instead of loose model output.</span>
+                    <span>Responses point back to indexed source material.</span>
                   </div>
                 </div>
               </CardItem>
@@ -376,14 +407,17 @@ export function ProjectsSection() {
           </motion.div>
 
           {/* Secondary Projects */}
-          <div className="grid md:grid-cols-2 gap-6 min-w-0">
-            {visibleProjects.map((project, index) => (
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={sectionViewport}
+            variants={contentGrid(0.1)}
+            className="grid md:grid-cols-2 gap-6 min-w-0"
+          >
+            {visibleProjects.map((project) => (
               <motion.div
                 key={project.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.3 }}
+                variants={cardReveal}
                 className="h-full"
               >
                 <CardContainer
@@ -391,15 +425,15 @@ export function ProjectsSection() {
                   className="h-full w-full"
                   rotationStrength={25}
                 >
-                  <CardBody className="bg-card/80 backdrop-blur-sm border-t-2 border-t-border border-x border-b border-border/80 rounded-xl p-4 sm:p-6 transition-all duration-300 group flex h-full w-full flex-col shadow-sm hover:border-t-[var(--accent-indigo)] hover:border-border hover:bg-card hover:shadow-xl relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-0 group-hover:opacity-[0.035] transition-opacity duration-500" />
+                  <CardBody className="apple-motion bg-card/80 backdrop-blur-sm border-t-2 border-t-border border-x border-b border-border/80 rounded-xl p-4 sm:p-6 group flex h-full w-full flex-col shadow-sm hover:border-t-[var(--accent-indigo)] hover:border-border hover:bg-card hover:shadow-xl relative overflow-hidden">
+                    <div className="apple-fade absolute inset-0 bg-gradient-to-br from-[var(--glow-indigo)] via-transparent to-transparent opacity-0 group-hover:opacity-[0.035]" />
 
                     <div className="relative flex-1">
                       <div className="mb-3 flex items-start justify-between gap-4">
                         <CardItem
                           as="h4"
                           translateZ={35}
-                          className="text-lg font-semibold group-hover:text-[var(--accent-indigo)] transition-colors"
+                          className="apple-color text-lg font-semibold group-hover:text-[var(--accent-indigo)]"
                         >
                           {project.title}
                         </CardItem>
@@ -413,7 +447,7 @@ export function ProjectsSection() {
                           ) : null}
 
                           <CardItem translateZ={45}>
-                            <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <ExternalLink className="apple-fade w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100" />
                           </CardItem>
                         </div>
                       </div>
@@ -449,7 +483,7 @@ export function ProjectsSection() {
                         {project.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="px-2 py-0.5 bg-accent/50 text-xs rounded font-mono text-muted-foreground border border-border/50 transition-all duration-300 hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm hover:-translate-y-0.5"
+                            className="apple-motion px-2 py-0.5 bg-accent/50 text-xs rounded font-mono text-muted-foreground border border-border/50 hover:border-border hover:bg-card hover:text-foreground hover:shadow-sm hover:-translate-y-0.5"
                           >
                             {tag}
                           </span>
@@ -459,49 +493,58 @@ export function ProjectsSection() {
 
                     <CardItem
                       translateZ={35}
-                      className="relative flex gap-2 pt-4 border-t border-border/50 mt-auto w-full"
+                      className="relative flex flex-col sm:flex-row gap-2 pt-4 border-t border-border/50 mt-auto w-full"
                     >
-                      <a
+                      <motion.a
                         href={project.demoHref}
-                        className="flex-1 flex items-center justify-center gap-2 py-2 bg-foreground text-background rounded-lg text-sm font-medium transition-all duration-300 hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+                        whileHover={{ y: -3, scale: 1.01 }}
+                        whileTap={{ y: -1, scale: 0.99 }}
+                        transition={smoothSpring}
+                        className="w-full sm:flex-1 flex items-center justify-center gap-2 py-2 bg-foreground text-background rounded-lg text-sm font-medium"
                       >
                         <ExternalLink className="w-4 h-4" />
                         Demo
-                      </a>
+                      </motion.a>
 
-                      <a
+                      <motion.a
                         href={project.codeHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm transition-all duration-300 hover:bg-card hover:border-border hover:shadow-md hover:-translate-y-0.5"
+                        whileHover={{ y: -3, scale: 1.01 }}
+                        whileTap={{ y: -1, scale: 0.99 }}
+                        transition={smoothSpring}
+                        className="w-full sm:flex-1 flex items-center justify-center gap-2 py-2 border border-border rounded-lg text-sm"
                       >
                         <Github className="w-4 h-4" />
                         Code
-                      </a>
+                      </motion.a>
                     </CardItem>
                   </CardBody>
                 </CardContainer>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* View All Projects */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.25, duration: 0.4 }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={sectionViewport}
+            variants={actionReveal}
             className="mt-10 flex justify-center"
           >
-            <a
+            <motion.a
               href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-indigo)] text-white rounded-lg text-sm font-medium transition-all duration-300 shadow-lg shadow-[var(--glow-indigo)] hover:bg-[var(--accent-indigo)]/90 hover:shadow-xl hover:-translate-y-0.5"
+              whileHover={{ y: -3, scale: 1.01 }}
+              whileTap={{ y: -1, scale: 0.99 }}
+              transition={smoothSpring}
+              className="group w-full sm:w-auto justify-center inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-indigo)] text-white rounded-lg text-sm font-medium shadow-lg shadow-[var(--glow-indigo)]"
             >
               View all projects
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
+              <ArrowRight className="w-4 h-4" />
+            </motion.a>
           </motion.div>
         </motion.div>
       </div>

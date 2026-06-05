@@ -27,7 +27,8 @@ export function TerminalPrompt({
 
       {showCursorOnly ? (
         <motion.span
-          animate={{ opacity: [0, 1, 0] }}
+          whileInView={{ opacity: [0, 1, 0] }}
+          viewport={{ once: false, amount: 0.4 }}
           transition={{
             duration: 1,
             repeat: Infinity,

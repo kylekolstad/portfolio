@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "motion/react";
 import { LinkPreview } from "./link-preview";
 
 type ExperienceProps = {
@@ -24,16 +23,7 @@ export function Experience({
 }: ExperienceProps) {
   return (
     <>
-      <motion.div
-        key={`${org}-${date}`}
-        initial={{ opacity: 0, x: -20 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{
-          delay: 0.1,
-          duration: 0.4,
-        }}
-      >
+      <div>
         <div className="flex flex-col md:flex-row md:items-baseline gap-1 md:gap-4 mb-3 md:mb-4">
           <span className="text-[var(--accent-indigo)] font-bold text-sm shrink-0 md:w-32">
             [{date}]
@@ -88,7 +78,7 @@ export function Experience({
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </>
   );
 }

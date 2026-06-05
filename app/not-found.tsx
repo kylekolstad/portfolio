@@ -7,7 +7,7 @@ export default function NotFound() {
         <p className="mb-2 text-sm font-mono text-[var(--accent-indigo)]">404</p>
         <h1 className="text-3xl font-bold mb-3">Page not found</h1>
         <p className="text-muted-foreground mb-6">The page you are looking for does not exist.</p>
-        <Link className="inline-flex px-4 py-2 rounded-lg border border-border hover:bg-accent transition-colors" href="/">
+        <Link className="inline-flex px-4 py-2 rounded-lg border border-border hover:bg-accent" href="/">
           Back home
         </Link>
       </section>

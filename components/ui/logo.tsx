@@ -12,7 +12,7 @@ export function Logo({ className = "" }: { className?: string }) {
     >
       <span className="inline-flex items-center">
         <span>Kyle</span>
-        <span className="text-[#3f4154] transition-colors duration-150 group-hover:text-[var(--accent-indigo)] dark:text-muted-foreground dark:group-hover:text-[var(--accent-indigo)]">
+        <span className="text-[#3f4154] dark:text-muted-foreground">
           _
         </span>
         <span>Kolstad</span>
@@ -21,7 +21,7 @@ export function Logo({ className = "" }: { className?: string }) {
         command=".dev"
         active
         speed={200}
-        className="text-[#3f4154] transition-colors duration-150 group-hover:text-[var(--accent-indigo)] dark:text-muted-foreground dark:group-hover:text-[var(--accent-indigo)]"
+        className="text-[#3f4154] dark:text-muted-foreground"
       />
     </span>
   );

@@ -30,6 +30,7 @@ export const CardContainer = ({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
+    containerRef.current.style.transition = "transform 80ms linear";
     const { left, top, width, height } =
       containerRef.current.getBoundingClientRect();
     const x = (e.clientX - left - width / 2) / rotationStrength;
@@ -40,11 +41,15 @@ export const CardContainer = ({
   const handleMouseEnter = () => {
     setIsMouseEntered(true);
     if (!containerRef.current) return;
+    containerRef.current.style.transition =
+      "transform 260ms cubic-bezier(0.22, 1, 0.36, 1)";
   };
 
   const handleMouseLeave = () => {
     if (!containerRef.current) return;
     setIsMouseEntered(false);
+    containerRef.current.style.transition =
+      "transform 320ms cubic-bezier(0.22, 1, 0.36, 1)";
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   };
   return (
@@ -64,7 +69,7 @@ export const CardContainer = ({
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           className={cn(
-            "flex items-center justify-center relative transition-all duration-200 ease-linear",
+            "apple-motion flex items-center justify-center relative",
             className
           )}
           style={{
@@ -129,6 +134,8 @@ export const CardItem = ({
 
   const handleAnimations = () => {
     if (!ref.current) return;
+    ref.current.style.transition =
+      "transform 320ms cubic-bezier(0.22, 1, 0.36, 1)";
     if (isMouseEntered) {
       ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
     } else {
@@ -139,7 +146,7 @@ export const CardItem = ({
   return (
     <Tag
       ref={ref}
-      className={cn("w-fit transition duration-200 ease-linear", className)}
+      className={cn("apple-motion w-fit", className)}
       {...rest}
     >
       {children}

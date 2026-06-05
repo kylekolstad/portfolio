@@ -54,6 +54,10 @@
   --accent-green: #14b8a6;
   --glow-blue: rgba(0, 112, 243, 0.15);
   --glow-indigo: rgba(99, 102, 241, 0.15);
+  --ease-apple: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fast: 220ms;
+  --motion-soft: 520ms;
+  --motion-slow: 720ms;
 }
 
 .dark {
@@ -228,6 +232,20 @@ a[href] {
   cursor: pointer;
 }
 
+.apple-motion {
+  backface-visibility: hidden;
+  will-change: transform, translate, scale;
+}
+
+.apple-motion:hover {
+}
+
+.apple-color {
+}
+
+.apple-fade {
+}
+
 button:disabled {
   cursor: not-allowed;
 }
@@ -240,46 +258,21 @@ button:disabled {
   display: none;
 }
 
-@keyframes stack-marquee-left {
-  from {
-    transform: translateX(0%);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes stack-marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-
-  to {
-    transform: translateX(0%);
-  }
-}
-
-.stack-marquee-track-left {
-  animation: stack-marquee-left 42s linear infinite;
-}
-
-.stack-marquee-track-right {
-  animation: stack-marquee-right 46s linear infinite;
-}
-
-.stack-marquee-row:hover .stack-marquee-track-left,
-.stack-marquee-row:hover .stack-marquee-track-right,
-.stack-marquee-stage:hover .stack-marquee-track-left,
-.stack-marquee-stage:hover .stack-marquee-track-right {
-  animation-play-state: paused;
+.terminal-frame-stable {
+  contain: paint;
+  isolation: isolate;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stack-marquee-track-left,
-  .stack-marquee-track-right {
-    animation-play-state: paused;
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
+
 }
 
 pre::-webkit-scrollbar,

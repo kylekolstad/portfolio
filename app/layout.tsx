@@ -4,7 +4,7 @@ import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import { ThemeProvider } from './components/theme-provider'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const siteUrl = 'https://kylekolstad.com'
 
@@ -16,15 +16,15 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Kyle Kolstad | Software Engineer',
+    default: 'Kyle Kolstad | Software Engineer | AI Engineering',
     template: '%s | Kyle Kolstad',
   },
   description:
-    'Software engineer specializing in backend systems, APIs, cloud infrastructure, integrations, and applied AI.',
+    'Software engineer with 6+ years of experience building backend systems, APIs, integrations, automation, and applied AI Engineering workflows.',
   openGraph: {
-    title: 'Kyle Kolstad | Software Engineer',
+    title: 'Kyle Kolstad | Software Engineer | AI Engineering',
     description:
-      'Backend-focused software engineer building reliable systems, APIs, integrations, and applied AI tools.',
+      'Building production-ready AI and backend systems around LLM applications, RAG workflows, automation, and reliable data movement.',
     url: siteUrl,
     siteName: 'Kyle Kolstad Portfolio',
     locale: 'en_US',

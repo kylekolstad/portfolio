@@ -1,4 +1,5 @@
-import type { Ref, ReactNode } from "react";
+import { motion } from "motion/react";
+import type { CSSProperties, Ref, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type WindowFrameVariant = "file" | "terminal" | "browser";
@@ -12,6 +13,7 @@ interface WindowFrameProps {
   className?: string;
   headerClassName?: string;
   contentClassName?: string;
+  contentStyle?: CSSProperties;
   contentRef?: Ref<HTMLDivElement>;
 }
 
@@ -24,6 +26,7 @@ export function WindowFrame({
   className,
   headerClassName,
   contentClassName,
+  contentStyle,
   contentRef,
 }: WindowFrameProps) {
   const isBrowser = variant === "browser";
@@ -45,9 +48,9 @@ export function WindowFrame({
         )}
       >
         <div className="flex shrink-0 gap-1.5">
-          <div className="h-3 w-3 rounded-full bg-red-500/80 transition-colors hover:bg-red-600" />
-          <div className="h-3 w-3 rounded-full bg-yellow-500/80 transition-colors hover:bg-yellow-600" />
-          <div className="h-3 w-3 rounded-full bg-emerald-500/80 transition-colors hover:bg-emerald-600" />
+          <motion.div className="h-3 w-3 rounded-full bg-red-500/80" whileHover={{ scale: 1.08 }} transition={{ duration: 0.2 }} />
+          <motion.div className="h-3 w-3 rounded-full bg-yellow-500/80" whileHover={{ scale: 1.08 }} transition={{ duration: 0.2 }} />
+          <motion.div className="h-3 w-3 rounded-full bg-emerald-500/80" whileHover={{ scale: 1.08 }} transition={{ duration: 0.2 }} />
         </div>
 
         {isBrowser && address ? (
@@ -74,7 +77,7 @@ export function WindowFrame({
         ) : null}
       </div>
 
-      <div ref={contentRef} className={contentClassName}>
+      <div ref={contentRef} className={contentClassName} style={contentStyle}>
         {children}
       </div>
     </div>

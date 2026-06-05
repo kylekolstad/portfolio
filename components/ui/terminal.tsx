@@ -1,7 +1,10 @@
 "use client";
+import { animate } from "motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { WindowFrame } from "@/components/ui/window-frame";
+import { appleEase } from "@/lib/motion";
 
 const KEY_SOUNDS_DOWN: Record<string, [number, number]> = {
   A: [31542, 85],
@@ -147,13 +150,16 @@ function useInView(ref: React.RefObject<HTMLElement | null>, once = true) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !triggered.current) {
-          setInView(true);
-          if (once) {
+        if (once) {
+          if (entry.isIntersecting && !triggered.current) {
+            setInView(true);
             triggered.current = true;
             observer.disconnect();
           }
+          return;
         }
+
+        setInView(entry.isIntersecting);
       },
       { threshold: 0.1 },
     );
@@ -381,6 +387,7 @@ export interface TerminalProps {
   typingSpeed?: number;
   delayBetweenCommands?: number;
   initialDelay?: number;
+  outputLineDelay?: number;
   enableSound?: boolean;
   run?: boolean;
   runtimeEnvironment?: string;
@@ -388,6 +395,12 @@ export interface TerminalProps {
   fitContent?: boolean;
   fitWidth?: boolean;
   showPromptOnComplete?: boolean;
+  waitForEntrance?: boolean;
+  entranceDelay?: number;
+  entranceOffsetX?: number;
+  entranceOffsetY?: number;
+  reserveFinalHeight?: boolean;
+  maxReservedHeightVh?: number;
 }
 
 export function Terminal({
@@ -401,15 +414,23 @@ export function Terminal({
   typingSpeed = 50,
   delayBetweenCommands = 800,
   initialDelay = 500,
+  outputLineDelay = 80,
   enableSound = true,
   onComplete,
   fitContent = false,
   fitWidth = false,
   showPromptOnComplete = true,
+  waitForEntrance = true,
+  entranceDelay = 0.26,
+  entranceOffsetX = 0,
+  entranceOffsetY = 18,
+  reserveFinalHeight = false,
+  maxReservedHeightVh = 36,
 }: TerminalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const inView = useInView(containerRef);
+  const isVisibleNow = useInView(containerRef, false);
   const { down, up } = useAudio(enableSound);
 
   const [lines, setLines] = useState<TerminalLine[]>([]);
@@ -420,7 +441,8 @@ export function Terminal({
   const [phase, setPhase] = useState<
     "idle" | "typing" | "executing" | "outputting" | "pausing" | "done"
   >("idle");
-  const [cursorVisible, setCursorVisible] = useState(true);
+  const [entranceStarted, setEntranceStarted] = useState(false);
+  const [entranceDone, setEntranceDone] = useState(false);
   const completedRef = useRef(false);
 
   const currentCommand = commands[commandIdx] || "";
@@ -430,11 +452,63 @@ export function Terminal({
   );
   const isLastCommand = commandIdx === commands.length - 1;
 
+  const estimateWrappedRows = (text: string, charsPerRow = 44) => {
+    if (!text) return 1;
+
+    return text
+      .split("\n")
+      .reduce(
+        (rows, segment) => rows + Math.max(1, Math.ceil(segment.length / charsPerRow)),
+        0,
+      );
+  };
+
+  const promptText = `${username}:~$ `;
+  const commandRows = commands.reduce(
+    (sum, command) => sum + estimateWrappedRows(`${promptText}${command}`),
+    0,
+  );
+  const outputRows = Object.values(outputs)
+    .flat()
+    .reduce((sum, line) => sum + estimateWrappedRows(line), 0);
+  const tailPromptRows = showPromptOnComplete ? estimateWrappedRows(promptText) : 0;
+
+  const estimatedRows = Math.max(
+    3,
+    commandRows + outputRows + tailPromptRows,
+  );
+  // Account for font line box + terminal content vertical padding so first line doesn't clip.
+  const estimatedContentHeightPx = Math.round(estimatedRows * 24 + 40);
+  const reservedContentStyle = reserveFinalHeight
+    ? {
+        height: `min(${estimatedContentHeightPx}px, ${maxReservedHeightVh}vh)`,
+        minHeight: `min(${estimatedContentHeightPx}px, ${maxReservedHeightVh}vh)`,
+      }
+    : undefined;
+
+  const waitWithMotion = (ms: number, onDone: () => void) => {
+    let isCancelled = false;
+    const control = animate(0, 1, {
+      duration: Math.max(0, ms) / 1000,
+      ease: "linear",
+    });
+
+    control.finished.then(() => {
+      if (!isCancelled) onDone();
+    });
+
+    return () => {
+      isCancelled = true;
+      control.stop();
+    };
+  };
+
   useEffect(() => {
     if (!inView || phase !== "idle") return;
-    const t = setTimeout(() => setPhase("typing"), initialDelay);
-    return () => clearTimeout(t);
-  }, [inView, phase, initialDelay]);
+    if (waitForEntrance && !entranceDone) return;
+    if (!waitForEntrance && !entranceStarted) return;
+    return waitWithMotion(initialDelay, () => setPhase("typing"));
+  }, [inView, entranceStarted, entranceDone, waitForEntrance, phase, initialDelay]);
 
   useEffect(() => {
     if (phase !== "typing") return;
@@ -442,22 +516,17 @@ export function Terminal({
     if (charIdx < currentCommand.length) {
       const char = currentCommand[charIdx];
       down(char);
-      const t = setTimeout(
-        () => {
-          up(char);
-          setCurrentText(currentCommand.slice(0, charIdx + 1));
-          setCharIdx((c) => c + 1);
-        },
-        typingSpeed + Math.random() * 30,
-      );
-      return () => clearTimeout(t);
+      return waitWithMotion(typingSpeed + Math.random() * 30, () => {
+        up(char);
+        setCurrentText(currentCommand.slice(0, charIdx + 1));
+        setCharIdx((c) => c + 1);
+      });
     } else {
       down("Enter");
-      const t = setTimeout(() => {
+      return waitWithMotion(40, () => {
         up("Enter");
         setPhase("executing");
-      }, 80);
-      return () => clearTimeout(t);
+      });
     }
   }, [phase, charIdx, currentCommand, typingSpeed, down, up]);
 
@@ -481,41 +550,33 @@ export function Terminal({
     if (phase !== "outputting") return;
 
     if (outputIdx >= 0 && outputIdx < currentOutputs.length) {
-      const t = setTimeout(() => {
+      return waitWithMotion(outputLineDelay, () => {
         setLines((prev) => [
           ...prev,
           { type: "output", content: currentOutputs[outputIdx] },
         ]);
         setOutputIdx((i) => i + 1);
-      }, 150);
-      return () => clearTimeout(t);
+      });
     } else if (outputIdx >= currentOutputs.length) {
-      const t = setTimeout(() => {
+      return waitWithMotion(70, () => {
         if (isLastCommand) {
           setPhase("done");
         } else {
           setPhase("pausing");
         }
-      }, 300);
-      return () => clearTimeout(t);
+      });
     }
   }, [phase, outputIdx, currentOutputs, isLastCommand]);
 
   useEffect(() => {
     if (phase !== "pausing") return;
-    const t = setTimeout(() => {
+    return waitWithMotion(delayBetweenCommands, () => {
       setCharIdx(0);
       setOutputIdx(-1);
       setCommandIdx((c) => c + 1);
       setPhase("typing");
-    }, delayBetweenCommands);
-    return () => clearTimeout(t);
+    });
   }, [phase, delayBetweenCommands]);
-
-  useEffect(() => {
-    const interval = setInterval(() => setCursorVisible((v) => !v), 530);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     if (phase !== "done" || completedRef.current) return;
@@ -542,8 +603,18 @@ export function Terminal({
   );
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
+      initial={{ opacity: 0, x: entranceOffsetX, y: entranceOffsetY }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true, amount: 0.01, margin: "0px" }}
+      transition={{ delay: entranceDelay, duration: 0.78, ease: appleEase }}
+      onAnimationStart={() => {
+        setEntranceStarted(true);
+      }}
+      onAnimationComplete={() => {
+        setEntranceDone(true);
+      }}
       className={cn(
         "mx-auto px-4 font-mono text-xs",
         fitWidth ? "w-fit max-w-full" : "w-full max-w-xl",
@@ -557,13 +628,14 @@ export function Terminal({
             {title} {runtimeEnvironment && ` - ${runtimeEnvironment}`}
           </>
         }
-        className="rounded-xl shadow-xl"
+        className="terminal-frame-stable rounded-xl shadow-xl"
         contentRef={contentRef}
         contentClassName={cn(
           "no-visible-scrollbar overflow-y-auto p-4 font-mono",
-          fitContent ? "min-h-0" : "h-80",
+          fitContent ? "h-auto min-h-0" : "h-64 sm:h-72 md:h-80",
           contentClassName,
         )}
+        contentStyle={reservedContentStyle}
       >
           {lines.map((line, i) => (
             <div
@@ -587,7 +659,11 @@ export function Terminal({
             <div className="leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
               {prompt}
               <SyntaxHighlightedText text={currentText} />
-              <span className="ml-0.5 inline-block h-4 w-2 bg-muted-foreground align-middle dark:bg-neutral-300" />
+              <motion.span
+                className="ml-0.5 inline-block h-4 w-2 bg-muted-foreground align-middle dark:bg-neutral-300"
+                animate={isVisibleNow ? { opacity: [1, 1, 0, 0] } : { opacity: 1 }}
+                transition={isVisibleNow ? { duration: 1.06, repeat: Infinity, ease: "linear", times: [0, 0.48, 0.49, 1] } : undefined}
+              />
             </div>
           )}
 
@@ -596,15 +672,14 @@ export function Terminal({
             phase === "outputting") && (
             <div className="leading-relaxed whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
               {phase !== "done" || showPromptOnComplete ? prompt : null}
-              <span
-                className={cn(
-                  "inline-block h-4 w-2 bg-muted-foreground align-middle transition-opacity duration-100 dark:bg-neutral-300",
-                  !cursorVisible && "opacity-0",
-                )}
+              <motion.span
+                className="inline-block h-4 w-2 bg-muted-foreground align-middle dark:bg-neutral-300"
+                animate={isVisibleNow ? { opacity: [1, 1, 0, 0] } : { opacity: 1 }}
+                transition={isVisibleNow ? { duration: 1.06, repeat: Infinity, ease: "linear", times: [0, 0.48, 0.49, 1] } : undefined}
               />
             </div>
           )}
       </WindowFrame>
-    </div>
+    </motion.div>
   );
 }

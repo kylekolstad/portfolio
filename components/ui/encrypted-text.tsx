@@ -1,5 +1,6 @@
 "use client";
 
+import { animate } from "motion";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -7,6 +8,7 @@ import { cn } from "@/lib/utils";
 type EncryptedTextProps = {
   text: string;
   className?: string;
+  startDelayMs?: number;
   revealDelayMs?: number;
   charset?: string;
   flipDelayMs?: number;
@@ -38,24 +40,46 @@ function generateGibberishPreservingSpaces(
   return result;
 }
 
+function getDeterministicEncryptedCharacter(
+  originalChar: string,
+  index: number,
+  charset: string
+): string {
+  if (originalChar === " ") return " ";
+
+  const seed = index * 37 + originalChar.charCodeAt(0) * 17;
+  let deterministicIndex = Math.abs(seed) % charset.length;
+  let encryptedChar = charset.charAt(deterministicIndex);
+
+  // Ensure the initial encrypted glyph never matches the real character.
+  if (encryptedChar === originalChar) {
+    deterministicIndex = (deterministicIndex + 1) % charset.length;
+    encryptedChar = charset.charAt(deterministicIndex);
+  }
+
+  return encryptedChar;
+}
+
 export const EncryptedText: React.FC<EncryptedTextProps> = ({
   text,
   className,
-  revealDelayMs = 50,
+  startDelayMs = 420,
+  revealDelayMs = 36,
   charset = DEFAULT_CHARSET,
-  flipDelayMs = 50,
+  flipDelayMs = 42,
   encryptedClassName,
   revealedClassName,
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, {
+    once: true,
+    amount: 0.01,
+    margin: "0px",
+  });
 
   const [hasStarted, setHasStarted] = useState(false);
   const [revealCount, setRevealCount] = useState(0);
-
-  const animationFrameRef = useRef<number | null>(null);
-  const startTimeRef = useRef(0);
-  const lastFlipTimeRef = useRef(0);
+  const revealCountRef = useRef(0);
 
   // Important: deterministic initial value.
   // Do NOT generate random chars here during render.
@@ -64,64 +88,84 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
   useEffect(() => {
     scrambleCharsRef.current = text.split("");
     setRevealCount(0);
+    revealCountRef.current = 0;
     setHasStarted(false);
   }, [text]);
 
   useEffect(() => {
     if (!isInView) return;
 
-    const initial = generateGibberishPreservingSpaces(text, charset);
-    scrambleCharsRef.current = initial.split("");
-
-    setHasStarted(true);
-    setRevealCount(0);
-
-    startTimeRef.current = performance.now();
-    lastFlipTimeRef.current = startTimeRef.current;
-
     let isCancelled = false;
+    const controls: Array<{ stop: () => void; finished: Promise<void> }> = [];
 
-    const update = (now: number) => {
+    const waitWithMotion = (ms: number) =>
+      new Promise<void>((resolve) => {
+        if (ms <= 0) {
+          resolve();
+          return;
+        }
+
+        const control = animate(0, 1, {
+          duration: ms / 1000,
+          ease: "linear",
+        });
+
+        controls.push(control);
+        control.finished.then(() => resolve());
+      });
+
+    const runAnimation = async () => {
+      await waitWithMotion(Math.max(0, startDelayMs));
       if (isCancelled) return;
 
-      const elapsedMs = now - startTimeRef.current;
       const totalLength = text.length;
+      const initial = generateGibberishPreservingSpaces(text, charset);
+      scrambleCharsRef.current = initial.split("");
 
-      const currentRevealCount = Math.min(
-        totalLength,
-        Math.floor(elapsedMs / Math.max(1, revealDelayMs))
-      );
+      setHasStarted(true);
+      setRevealCount(0);
+      revealCountRef.current = 0;
 
-      setRevealCount(currentRevealCount);
+      const revealControl = animate(0, totalLength, {
+        duration: (Math.max(1, revealDelayMs) * Math.max(1, totalLength)) / 1000,
+        ease: "linear",
+        onUpdate: (latest) => {
+          if (isCancelled) return;
+          const nextReveal = Math.min(totalLength, Math.floor(latest));
+          revealCountRef.current = nextReveal;
+          setRevealCount(nextReveal);
+        },
+      });
 
-      if (currentRevealCount >= totalLength) return;
+      controls.push(revealControl);
 
-      const timeSinceLastFlip = now - lastFlipTimeRef.current;
-
-      if (timeSinceLastFlip >= Math.max(0, flipDelayMs)) {
-        for (let index = 0; index < totalLength; index += 1) {
-          if (index >= currentRevealCount) {
+      const scrambleLoop = async () => {
+        while (!isCancelled && revealCountRef.current < totalLength) {
+          for (let index = revealCountRef.current; index < totalLength; index += 1) {
             scrambleCharsRef.current[index] =
               text[index] === " " ? " " : generateRandomCharacter(charset);
           }
+
+          await waitWithMotion(Math.max(0, flipDelayMs));
         }
+      };
 
-        lastFlipTimeRef.current = now;
+      scrambleLoop();
+      await revealControl.finished;
+
+      if (!isCancelled) {
+        revealCountRef.current = totalLength;
+        setRevealCount(totalLength);
       }
-
-      animationFrameRef.current = requestAnimationFrame(update);
     };
 
-    animationFrameRef.current = requestAnimationFrame(update);
+    runAnimation();
 
     return () => {
       isCancelled = true;
-
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
+      controls.forEach((control) => control.stop());
     };
-  }, [isInView, text, revealDelayMs, charset, flipDelayMs]);
+  }, [isInView, text, startDelayMs, revealDelayMs, charset, flipDelayMs]);
 
   if (!text) return null;
 
@@ -147,7 +191,7 @@ export const EncryptedText: React.FC<EncryptedTextProps> = ({
           const isRevealed = hasStarted && index < revealCount;
 
           const displayChar = !hasStarted
-            ? char
+            ? getDeterministicEncryptedCharacter(char, index, charset)
             : isRevealed
               ? char
               : char === " "

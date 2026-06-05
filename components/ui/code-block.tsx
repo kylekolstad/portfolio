@@ -62,7 +62,7 @@ export const CodeBlock = ({
               <button
                 key={index}
                 onClick={() => setActiveTab(index)}
-                className={`px-3 !py-2 text-xs transition-all duration-300 font-sans hover:-translate-y-0.5 ${
+                className={`apple-motion px-3 !py-2 text-xs font-sans hover:-translate-y-0.5 ${
                   activeTab === index
                     ? "text-white"
                     : "text-zinc-400 hover:text-zinc-200"
@@ -78,7 +78,7 @@ export const CodeBlock = ({
             <div className="text-xs text-zinc-400">{filename}</div>
             <button
               onClick={copyToClipboard}
-              className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 transition-all duration-300 hover:-translate-y-0.5 font-sans"
+              className="apple-motion flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-200 hover:-translate-y-0.5 font-sans"
             >
               {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
             </button>
